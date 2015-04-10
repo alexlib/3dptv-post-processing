@@ -270,7 +270,7 @@ void map_slices_to_cycles()
        c+=sprintf (name+c, "%1d", i); 
        
        fpp = fopen(name,"r");
-       fscanf (fpp, "%d\0", &numOfPoints);
+       fscanf (fpp, "%d", &numOfPoints);
        
        for (int j=0; j<numOfPoints; j++){
 		   // pointList.map_slice_cycle[i-pointList.firstSFile+1][j][0]=cid;//cycle id
@@ -298,14 +298,14 @@ void readPTVFile(int n, int index)
        c+=sprintf (name+c, "%1d", n+index); 
        
        fpp = fopen(name,"r");
-       fscanf (fpp, "%d\0", &numOfPoints);
+       fscanf (fpp, "%d", &numOfPoints);
        pointList.point[index+pointList.PLh][0][0]=numOfPoints;
        for (int i=1; i<numOfPoints+1; i++){ //these lines 218-231 müssen geändert werden
-           fscanf (fpp, "%d\0", &left);
-           fscanf (fpp, "%d\0", &right);
-           fscanf (fpp, "%lf\0", &x);
-           fscanf (fpp, "%lf\0", &y);
-           fscanf (fpp, "%lf\0", &z);
+           fscanf (fpp, "%d", &left);
+           fscanf (fpp, "%d", &right);
+           fscanf (fpp, "%lf", &x);
+           fscanf (fpp, "%lf", &y);
+           fscanf (fpp, "%lf", &z);
            rmsDist=0.005;
 		   pointList.point[index+pointList.PLh][i][0]=left+1;//;//
 		   pointList.point[index+pointList.PLh][i][1]=right+1;//;//
@@ -346,15 +346,15 @@ void read_scanning_PTVFile(int n, int index)
 		   id = ((n+index)-pointList.firstFile)*pointList.numSlices+s+pointList.firstSFile;
            c+=sprintf (name+c, "%1d", id); // <--and now we have cid mapped to id
            fpp = fopen(name,"r");
-           fscanf (fpp, "%d\0", &numOfPoints);
+           fscanf (fpp, "%d", &numOfPoints);
            for (int i=0; i<numOfPoints; i++){ //these lines 218-231 müssen geändert werden
-               fscanf (fpp, "%d\0",  &fid_left);
-			   fscanf (fpp, "%d\0",  &left);
-               fscanf (fpp, "%d\0",  &fid_right);
-			   fscanf (fpp, "%d\0",  &right);
-               fscanf (fpp, "%lf\0", &x);
-               fscanf (fpp, "%lf\0", &y);
-               fscanf (fpp, "%lf\0", &z);
+               fscanf (fpp, "%d",  &fid_left);
+			   fscanf (fpp, "%d",  &left);
+               fscanf (fpp, "%d",  &fid_right);
+			   fscanf (fpp, "%d",  &right);
+               fscanf (fpp, "%lf", &x);
+               fscanf (fpp, "%lf", &y);
+               fscanf (fpp, "%lf", &z);
                rmsDist=0.005;
 
 			   cid       = n+index;
@@ -2008,21 +2008,21 @@ void readXUAPFile(int n, bool firstTime)
                 fpp = fopen(name,"r");
                 while(!feof(fpp)){
                    numOfPoints++;
-                   fscanf (fpp, "%lf\0", &left);
-                   fscanf (fpp, "%lf\0", &right);
-                   fscanf (fpp, "%lf\0", &dummy); //measured x
-                   fscanf (fpp, "%lf\0", &dummy); //measured y
-                   fscanf (fpp, "%lf\0", &dummy); //measured z
-                   fscanf (fpp, "%lf\0", &x); //cubic spline x
-                   fscanf (fpp, "%lf\0", &y); //cubic spline y
-                   fscanf (fpp, "%lf\0", &z); //cubic spline z
-                   fscanf (fpp, "%lf\0", &u);
-                   fscanf (fpp, "%lf\0", &v);
-                   fscanf (fpp, "%lf\0", &w);
-                   fscanf (fpp, "%lf\0", &ax);
-                   fscanf (fpp, "%lf\0", &ay);
-                   fscanf (fpp, "%lf\0", &az);
-                   fscanf (fpp, "%lf\0", &cubic);
+                   fscanf (fpp, "%lf", &left);
+                   fscanf (fpp, "%lf", &right);
+                   fscanf (fpp, "%lf", &dummy); //measured x
+                   fscanf (fpp, "%lf", &dummy); //measured y
+                   fscanf (fpp, "%lf", &dummy); //measured z
+                   fscanf (fpp, "%lf", &x); //cubic spline x
+                   fscanf (fpp, "%lf", &y); //cubic spline y
+                   fscanf (fpp, "%lf", &z); //cubic spline z
+                   fscanf (fpp, "%lf", &u);
+                   fscanf (fpp, "%lf", &v);
+                   fscanf (fpp, "%lf", &w);
+                   fscanf (fpp, "%lf", &ax);
+                   fscanf (fpp, "%lf", &ay);
+                   fscanf (fpp, "%lf", &az);
+                   fscanf (fpp, "%lf", &cubic);
                    pointList.point[i][numOfPoints][0]=left;
                    pointList.point[i][numOfPoints][1]=right;
                    pointList.point[i][numOfPoints][2]=x;
@@ -2088,21 +2088,21 @@ void prepare_fast_search()
 	c+=sprintf (name+c, "%1d", pointList.firstFile+pointList.minLeftRight+2);
     fpp = fopen(name,"r");
     while(!feof(fpp)){
-         fscanf (fpp, "%lf\0", &left);
-         fscanf (fpp, "%lf\0", &right);
-         fscanf (fpp, "%lf\0", &dummy); //measured x
-         fscanf (fpp, "%lf\0", &dummy); //measured y
-         fscanf (fpp, "%lf\0", &dummy); //measured z
-         fscanf (fpp, "%lf\0", &x); //cubic spline x
-         fscanf (fpp, "%lf\0", &y); //cubic spline y
-         fscanf (fpp, "%lf\0", &z); //cubic spline z
-         fscanf (fpp, "%lf\0", &u);
-         fscanf (fpp, "%lf\0", &v);
-         fscanf (fpp, "%lf\0", &w);
-         fscanf (fpp, "%lf\0", &ax);
-         fscanf (fpp, "%lf\0", &ay);
-         fscanf (fpp, "%lf\0", &az);
-         fscanf (fpp, "%lf\0", &cubic);
+         fscanf (fpp, "%lf", &left);
+         fscanf (fpp, "%lf", &right);
+         fscanf (fpp, "%lf", &dummy); //measured x
+         fscanf (fpp, "%lf", &dummy); //measured y
+         fscanf (fpp, "%lf", &dummy); //measured z
+         fscanf (fpp, "%lf", &x); //cubic spline x
+         fscanf (fpp, "%lf", &y); //cubic spline y
+         fscanf (fpp, "%lf", &z); //cubic spline z
+         fscanf (fpp, "%lf", &u);
+         fscanf (fpp, "%lf", &v);
+         fscanf (fpp, "%lf", &w);
+         fscanf (fpp, "%lf", &ax);
+         fscanf (fpp, "%lf", &ay);
+         fscanf (fpp, "%lf", &az);
+         fscanf (fpp, "%lf", &cubic);
 		 if(x<pointList.minX && cubic==1){pointList.minX=x;}
 		 if(y<pointList.minY && cubic==1){pointList.minY=y;}
 		 if(z<pointList.minZ && cubic==1){pointList.minZ=z;}
@@ -2171,41 +2171,41 @@ void readXUAGFile(int n, bool firstTime)
                 fpp = fopen(name,"r");
                 while(!feof(fpp)){
                    numOfPoints++;
-                   fscanf (fpp, "%lf\0", &left);
-                   fscanf (fpp, "%lf\0", &right);
-                   fscanf (fpp, "%lf\0", &x); //cubic spline x
-                   fscanf (fpp, "%lf\0", &y); //cubic spline y
-                   fscanf (fpp, "%lf\0", &z); //cubic spline z
-                   fscanf (fpp, "%lf\0", &u);
-                   fscanf (fpp, "%lf\0", &v);
-                   fscanf (fpp, "%lf\0", &w);
-                   fscanf (fpp, "%lf\0", &ax);
-                   fscanf (fpp, "%lf\0", &ay);
-                   fscanf (fpp, "%lf\0", &az);
-                   fscanf (fpp, "%lf\0", &cubic);
-				   fscanf (fpp, "%lf\0", &ux);
-                   fscanf (fpp, "%lf\0", &uy);
-                   fscanf (fpp, "%lf\0", &uz);
-				   fscanf (fpp, "%lf\0", &vx);
-                   fscanf (fpp, "%lf\0", &vy);
-                   fscanf (fpp, "%lf\0", &vz);
-				   fscanf (fpp, "%lf\0", &wx);
-                   fscanf (fpp, "%lf\0", &wy);
-                   fscanf (fpp, "%lf\0", &wz);
-				   fscanf (fpp, "%lf\0", &grad);
-				   fscanf (fpp, "%lf\0", &ut);
-				   fscanf (fpp, "%lf\0", &vt);
-				   fscanf (fpp, "%lf\0", &wt);
-				   fscanf (fpp, "%lf\0", &axx);
-				   fscanf (fpp, "%lf\0", &axy);
-				   fscanf (fpp, "%lf\0", &axz);
-				   fscanf (fpp, "%lf\0", &ayx);
-				   fscanf (fpp, "%lf\0", &ayy);
-				   fscanf (fpp, "%lf\0", &ayz);
-				   fscanf (fpp, "%lf\0", &azx);
-				   fscanf (fpp, "%lf\0", &azy);
-				   fscanf (fpp, "%lf\0", &azz);
-				   fscanf (fpp, "%lf\0", &quality);
+                   fscanf (fpp, "%lf", &left);
+                   fscanf (fpp, "%lf", &right);
+                   fscanf (fpp, "%lf", &x); //cubic spline x
+                   fscanf (fpp, "%lf", &y); //cubic spline y
+                   fscanf (fpp, "%lf", &z); //cubic spline z
+                   fscanf (fpp, "%lf", &u);
+                   fscanf (fpp, "%lf", &v);
+                   fscanf (fpp, "%lf", &w);
+                   fscanf (fpp, "%lf", &ax);
+                   fscanf (fpp, "%lf", &ay);
+                   fscanf (fpp, "%lf", &az);
+                   fscanf (fpp, "%lf", &cubic);
+				   fscanf (fpp, "%lf", &ux);
+                   fscanf (fpp, "%lf", &uy);
+                   fscanf (fpp, "%lf", &uz);
+				   fscanf (fpp, "%lf", &vx);
+                   fscanf (fpp, "%lf", &vy);
+                   fscanf (fpp, "%lf", &vz);
+				   fscanf (fpp, "%lf", &wx);
+                   fscanf (fpp, "%lf", &wy);
+                   fscanf (fpp, "%lf", &wz);
+				   fscanf (fpp, "%lf", &grad);
+				   fscanf (fpp, "%lf", &ut);
+				   fscanf (fpp, "%lf", &vt);
+				   fscanf (fpp, "%lf", &wt);
+				   fscanf (fpp, "%lf", &axx);
+				   fscanf (fpp, "%lf", &axy);
+				   fscanf (fpp, "%lf", &axz);
+				   fscanf (fpp, "%lf", &ayx);
+				   fscanf (fpp, "%lf", &ayy);
+				   fscanf (fpp, "%lf", &ayz);
+				   fscanf (fpp, "%lf", &azx);
+				   fscanf (fpp, "%lf", &azy);
+				   fscanf (fpp, "%lf", &azz);
+				   fscanf (fpp, "%lf", &quality);
                    pointList.point[i][numOfPoints][0]=left;//1
                    pointList.point[i][numOfPoints][1]=right;//2
                    pointList.point[i][numOfPoints][2]=x;//3
