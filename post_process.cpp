@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
 	else{
 	    if (NULL == (input = fopen(argv[1],"r"))){
 		    cout<< "\ndid not find *.inp file";
+            return 0;
 	    }
 	    else{
 		    cout<< "\nsuccesfully opened *.inp file \n";
