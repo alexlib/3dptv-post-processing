@@ -58,12 +58,11 @@ static bool solve(int n, int m);
 static void writeXUAPFile(int t);
 static void followTrajPoint(FILE *fpp, int t,int startPoint);
 static void readXUAPFile(int n, bool firstTime);
-static void readXUAGFile(int n, bool firstTime);
+// static void readXUAGFile(int n, bool firstTime);
 
 
 int main(int argc, char *argv[])
 {
-	char garb[10];
 	char pa[256];
 	char name[256];
 	int c;
@@ -100,7 +99,7 @@ int main(int argc, char *argv[])
 
 
 	//data
-    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,pa);
+    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);
     fscanf(input,"%i",&n); flushline(input);pointList.firstSFile               = n; // the code will compute the cycle numbers,i.e. the firstFile and lastFile by itself
 	fscanf(input,"%i",&n); flushline(input);pointList.lastSFile                = n; // the code will compute the cycle numbers,i.e. the firstFile and lastFile by itself
 	fscanf(input,"%i",&n); flushline(input);pointList.numSlices                = n;
@@ -222,7 +221,7 @@ int main(int argc, char *argv[])
 		  }
 		  cout << "processing file .............."<<i<<"\n";
 		   
-          c=sprintf (name, pointList.path);
+          c=sprintf (name, "%s", pointList.path);
 	      c+=sprintf (name+c, "/trajPoint.");
           c+=sprintf (name+c, "%1d", i); 
           fpp = fopen(name,"w");
@@ -232,9 +231,9 @@ int main(int argc, char *argv[])
        }
 	}
 	///////////////////////////////////////////////////////////////////////////////////
-	scanf("Please hit a key  %s", garb);  // to stop console
+	// scanf("Please hit a key  %s", garb);  // to stop console
 
-	return 0;
+	return 1;
 }
 
 void flushline(FILE * fp)
@@ -265,7 +264,7 @@ void map_slices_to_cycles()
 		   pointList.numPoints_per_cycle[cid]=0; //so now it is initiated for cummulative cycle point_id
 	   }
   
-       c=sprintf (name, pointList.path);
+       c=sprintf (name,"%s", pointList.path);
 	   c+=sprintf (name+c, "/ptv_is.");
        c+=sprintf (name+c, "%1d", i); 
        
@@ -293,7 +292,7 @@ void readPTVFile(int n, int index)
     char name[256];
 
     if(n+index>pointList.firstFile-1 && n+index<pointList.lastFile+1){
-       c=sprintf (name, pointList.path);
+       c=sprintf (name, "%s", pointList.path);
 	   c+=sprintf (name+c, "/ptv_is.");
        c+=sprintf (name+c, "%1d", n+index); 
        
@@ -327,7 +326,7 @@ void read_scanning_PTVFile(int n, int index)
     FILE *fpp;
 	int c;
     int numOfPoints;
-    int fid_left,left,fid_right,right,cid,old_cid,id,cpid,left_pid,right_pid;
+    int fid_left,left,fid_right,right,cid,id,cpid,left_pid,right_pid;
     double x,y,z,rmsDist;
 
     char name[256];
@@ -339,7 +338,7 @@ void read_scanning_PTVFile(int n, int index)
 		//now loop through slices etc
 		for (int s=0;s<pointList.numSlices;s++){
 
-		   c=sprintf (name, pointList.path);
+		   c=sprintf (name, "%s", pointList.path);
 	       c+=sprintf (name+c, "/ptv_is.");
            //c+=sprintf (name+c, "%1d", n+index); <- as was before scanning
 		   // map n+index to proper slice frame id
@@ -799,7 +798,7 @@ void writeXUAPFile(int t)
     char name[256];
     int c;
 
-    c=sprintf (name, pointList.path);
+    c=sprintf (name, "%s", pointList.path);
     c+=sprintf (name+c, "/xuap.");
     c+=sprintf (name+c, "%1d", t);
 
@@ -850,8 +849,8 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
 	 double s111,s222,s333,s112,s113,s221,s223,s331,s332,s123;
      double sijsjkski,wsq,twosijsij,R,Q,div,ref,diss,USq;
      int time;
-	 double u[3];
-	 double a[3];
+	 // double u[3];
+	 // double a[3];
 	 double ref_diva,diva,reldiva,quality,reldivu;
     
      double minDistA[500];
@@ -869,10 +868,10 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
      int start;
      int end;
      int minCounter;
-	 int counter_f;
+	 // int counter_f;
 
-	 double avU[3];
-	 double avA[3];
+	 // double avU[3];
+	 // double avA[3];
 
      bool ok;
      startT=t;
@@ -1944,7 +1943,7 @@ void readXUAPFile(int n, bool firstTime)
     FILE *fpp_xuag;
     char name_xuag[256];
     int c_xuag;
-    c_xuag=sprintf (name_xuag, pointList.path);
+    c_xuag=sprintf (name_xuag, "%s", pointList.path);
     c_xuag+=sprintf (name_xuag+c_xuag, "/xuag.");
     c_xuag+=sprintf (name_xuag+c_xuag, "%1d", n-1);
 
@@ -2002,7 +2001,7 @@ void readXUAPFile(int n, bool firstTime)
 		        }
 
                 numOfPoints=0;
-                c=sprintf (name, pointList.path);
+                c=sprintf (name, "%s", pointList.path);
                 c+=sprintf (name+c, "/xuap.");
                 c+=sprintf (name+c, "%1d", n-2+i);
                 fpp = fopen(name,"r");
@@ -2083,7 +2082,7 @@ void prepare_fast_search()
 	pointList.maxY=-1e6;
 	pointList.maxZ=-1e6;
 
-    c=sprintf (name, pointList.path);
+    c=sprintf (name, "%s", pointList.path);
     c+=sprintf (name+c, "/xuap.");
 	c+=sprintf (name+c, "%1d", pointList.firstFile+pointList.minLeftRight+2);
     fpp = fopen(name,"r");
@@ -2143,114 +2142,3 @@ void prepare_fast_search()
 	
 }
 
-void readXUAGFile(int n, bool firstTime)
-{
-    int numOfPoints;
-    double left,right,x,y,z,u,v,w,ax,ay,az,dummy,cubic;
-	double ux,uy,uz,vx,vy,vz,wx,wy,wz,grad,ut,vt,wt,axx,axy,axz,ayx,ayy,ayz,azx,azy,azz,quality;
-
-    FILE *fpp;
-    char name[256];
-    int c;
-
-       for(int i=0;i<pointList.numOfFrames;i++){
-          if(n-2+i>pointList.firstFile-1 && n-2+i<pointList.lastFile){
-             if(i<pointList.numOfFrames-1 && !(firstTime)){
-
-				 for(int j=0;j<pointList.point[i+1][0][0]+1;j++){           
-					for(int k=0;k<35;k++){
-                        pointList.point[i][j][k]=pointList.point[i+1][j][k];
-                    }
-                 }
-             }
-             else{
-                numOfPoints=0;
-                c=sprintf (name, pointList.path);
-                c+=sprintf (name+c, "/xuag.");
-                c+=sprintf (name+c, "%1d", n-2+i);
-                fpp = fopen(name,"r");
-                while(!feof(fpp)){
-                   numOfPoints++;
-                   fscanf (fpp, "%lf", &left);
-                   fscanf (fpp, "%lf", &right);
-                   fscanf (fpp, "%lf", &x); //cubic spline x
-                   fscanf (fpp, "%lf", &y); //cubic spline y
-                   fscanf (fpp, "%lf", &z); //cubic spline z
-                   fscanf (fpp, "%lf", &u);
-                   fscanf (fpp, "%lf", &v);
-                   fscanf (fpp, "%lf", &w);
-                   fscanf (fpp, "%lf", &ax);
-                   fscanf (fpp, "%lf", &ay);
-                   fscanf (fpp, "%lf", &az);
-                   fscanf (fpp, "%lf", &cubic);
-				   fscanf (fpp, "%lf", &ux);
-                   fscanf (fpp, "%lf", &uy);
-                   fscanf (fpp, "%lf", &uz);
-				   fscanf (fpp, "%lf", &vx);
-                   fscanf (fpp, "%lf", &vy);
-                   fscanf (fpp, "%lf", &vz);
-				   fscanf (fpp, "%lf", &wx);
-                   fscanf (fpp, "%lf", &wy);
-                   fscanf (fpp, "%lf", &wz);
-				   fscanf (fpp, "%lf", &grad);
-				   fscanf (fpp, "%lf", &ut);
-				   fscanf (fpp, "%lf", &vt);
-				   fscanf (fpp, "%lf", &wt);
-				   fscanf (fpp, "%lf", &axx);
-				   fscanf (fpp, "%lf", &axy);
-				   fscanf (fpp, "%lf", &axz);
-				   fscanf (fpp, "%lf", &ayx);
-				   fscanf (fpp, "%lf", &ayy);
-				   fscanf (fpp, "%lf", &ayz);
-				   fscanf (fpp, "%lf", &azx);
-				   fscanf (fpp, "%lf", &azy);
-				   fscanf (fpp, "%lf", &azz);
-				   fscanf (fpp, "%lf", &quality);
-                   pointList.point[i][numOfPoints][0]=left;//1
-                   pointList.point[i][numOfPoints][1]=right;//2
-                   pointList.point[i][numOfPoints][2]=x;//3
-                   pointList.point[i][numOfPoints][3]=y;//4
-                   pointList.point[i][numOfPoints][4]=z;//5
-                   pointList.point[i][numOfPoints][5]=u;//6
-                   pointList.point[i][numOfPoints][6]=v;//7
-                   pointList.point[i][numOfPoints][7]=w;//8
-                   pointList.point[i][numOfPoints][8]=ax;//9
-                   pointList.point[i][numOfPoints][9]=ay;//10
-                   pointList.point[i][numOfPoints][10]=az;//11
-                   pointList.point[i][numOfPoints][11]=cubic;//12
-				   pointList.point[i][numOfPoints][12]=ux;//13
-                   pointList.point[i][numOfPoints][13]=uy;//14
-                   pointList.point[i][numOfPoints][14]=uz;//15
-				   pointList.point[i][numOfPoints][15]=vx;//16
-                   pointList.point[i][numOfPoints][16]=vy;//17
-                   pointList.point[i][numOfPoints][17]=vz;//18
-				   pointList.point[i][numOfPoints][18]=wx;//19
-                   pointList.point[i][numOfPoints][19]=wy;//20
-                   pointList.point[i][numOfPoints][20]=wz;//21
-				   pointList.point[i][numOfPoints][21]=grad;//22
-				   pointList.point[i][numOfPoints][22]=ut;//23
-                   pointList.point[i][numOfPoints][23]=vt;//24
-                   pointList.point[i][numOfPoints][24]=wt;//25
-				   pointList.point[i][numOfPoints][25]=axx;//26
-				   pointList.point[i][numOfPoints][26]=axy;//27
-				   pointList.point[i][numOfPoints][27]=axz;//28
-				   pointList.point[i][numOfPoints][28]=ayx;//29
-				   pointList.point[i][numOfPoints][29]=ayy;//30
-				   pointList.point[i][numOfPoints][30]=ayz;//31
-				   pointList.point[i][numOfPoints][31]=azx;//32
-				   pointList.point[i][numOfPoints][32]=azy;//33
-				   pointList.point[i][numOfPoints][33]=azz;//34
-				   pointList.point[i][numOfPoints][34]=0;//35
-				   pointList.point[i][numOfPoints][35]=0;//36
-				   pointList.point[i][numOfPoints][36]=0;//37
-				   pointList.point[i][numOfPoints][37]=quality;//38;
-                }
-                fclose (fpp);
-                pointList.point[i][0][0]=numOfPoints;
-             }
-          }
-          else{
-             pointList.point[i][0][0]=0;
-          }
-       }
-}
