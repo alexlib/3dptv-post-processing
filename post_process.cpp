@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 		//if (NULL == (input = fopen("D:/PTV/version_March_2013_scanning/input_2905.txt","r"))){ 
 		if (NULL == (input = fopen("input.inp","r"))){ 	
 		    cout<< "\ndid not find input.inp file";
+            return 0;
 	    }
 	    else{
 		    cout<< "\n automatically and succesfully opened *.inp file \n";
