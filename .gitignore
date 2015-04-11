@@ -1,1 +1,8 @@
 post_process
+small_data/trajPoint.*
+small_data/xuap.*
+small_data/xuag.*
+test_data/trajPoint.*
+test_data/xuap.*
+test_data/xuag.*
+

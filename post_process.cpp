@@ -8,7 +8,7 @@
 // luethi@ifu.baug.ethz.ch
 //
 // last update/change: August 2011 Marc Wolf
-// last update/change: April 2015 Alex Liberzon @alexlib
+// last update/change: April 2015 Alex Liberzon, see https://github.com/alexlib/3dptv-post-processing
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 	//begin of read in control parameters
 	if (argc == 1) {
 		if (NULL == (input = fopen("input.inp","r"))){ 	
-		    cout<< "\ndid not find input.inp file";
+		    cout<< "\n did not find input.inp file \n ";
             return 0;
 	    }
 	    else{
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 	}
 	else{
 	    if (NULL == (input = fopen(argv[1],"r"))){
-		    cout<< "\ndid not find *.inp file";
+		    cout<< "\ndid not find *.inp file \n";
             return 0;
 	    }
 	    else{
@@ -144,19 +144,20 @@ int main(int argc, char *argv[])
 	fscanf(input,"%f",&e); flushline(input);pointList.zmaxChannel              = e;
 	fscanf(input,"%f",&e); flushline(input);pointList.yChamberChannel          = e;
 
-    
+    cout<< "\n ============================================================================= \n";
+    cout<< "\n Warning: this version does not produce pressure and Hessian separate files    \n";
     cout<< "\n Warning: the input file does not include xminChamber and following parameters \n";
-    cout<< "\n ----------------------------------------------------------------------- \n";
+    cout<< "\n ============================================================================= \n";
 
 /* 
- 1	                          %make xuap.* files?
- 1	                          %make trajPoint.* files?
+ 1	                          %make xuap.* files?       % has to be 1 - no other option is working
+ 1	                          %make trajPoint.* files?  % cannot be 1 if xuap is zero
  0	                          %make derivatives?
- 0	                          %make p_trajPoint.* files?
- 0	                          %make H_trajPoint.* files?
+ 0	                          %make p_trajPoint.* files? % does not working in this version
+ 0	                          %make H_trajPoint.* files? % does not working in this version
  /Users/alex/Documents/OpenPTV/3d-ptv-post-process/test_data/                   %path where ptv_is.* files are
  101000	                      %firstFile,
- 101007s                        %lastFile
+ 101025                        %lastFile
  1  	                          %num slices, if set to 1 it is like normal PTV, i.e. non-scanning, 18 for jet
  0		                      %delta_t between slices, set to 0 if num_slices=1
  0.01                          %delta_t scan, also use this for non-scanning data, 0.01 sec = 100 fps
@@ -590,6 +591,7 @@ void doCubicSplines(bool single,int number)
           pointList.point[pointList.PLh][i][6]=pointList.X[0]; //pointList.point[pointList.PLh][ind[pointList.PLh]][3];//
           pointList.point[pointList.PLh][i][9]=pointList.X[1]; //(1./(2.*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][3]-pointList.point[9][ind[9]][3]);//
           pointList.point[pointList.PLh][i][12]=2.*pointList.X[2]; //(1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][3]-2.*pointList.point[pointList.PLh][ind[pointList.PLh]][3]+pointList.point[9][ind[9]][3]);//
+          
           //z-Component
           setAllMatrixesToZero(4);
           for(int t=minIndex-pointList.PLh;t<maxIndex-pointList.PLh+1;t++){
@@ -620,8 +622,13 @@ void doCubicSplines(bool single,int number)
           pointList.point[pointList.PLh][i][7]=pointList.X[0]; //pointList.point[pointList.PLh][ind[pointList.PLh]][4];//
           pointList.point[pointList.PLh][i][10]=pointList.X[1];//(1./(2.*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][4]-pointList.point[9][ind[9]][4]);//
           pointList.point[pointList.PLh][i][13]=2.*pointList.X[2]; //(1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][4]-2.*pointList.point[10][ind[10]][4]+pointList.point[9][ind[9]][4]);//
+          
           //max break!
+          velocity=pow(pow(pointList.point[pointList.PLh][i][8],2.)+pow(pointList.point[pointList.PLh][i][9],2.)+pow(pointList.point[pointList.PLh][i][10],2.),0.5);
+          
+          /* this seems to be a bug instead of [10] shall be [pointList.PLh], AL, 11-Apr-15
           velocity=pow(pow(pointList.point[10][i][8],2.)+pow(pointList.point[10][i][9],2.)+pow(pointList.point[10][i][10],2.),0.5);
+         */
           if(velocity>pointList.tolMaxVel){
              pointList.point[pointList.PLh][i][14]=0;
           }
@@ -954,7 +961,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
      startT=t;
 
      if(t==pointList.firstFile){
-		 cout << "\nreading initial xuap, may take some time....\n\n";
+		 cout << "\n reading initial xuap, may take some time....\n\n";
          readXUAPFile(t,true);
      }
      else{
@@ -2066,7 +2073,7 @@ void readXUAPFile(int n, bool firstTime)
 		         }
              }
              else{
-				 cout << "reading xuap ................."<<n-2+i<<"\n";
+				 cout << "reading xuap ................." << n-2+i << "\n";
 
                 //Beat March 2013, init fast_search counter
 		        for (int ii=0;ii<pointList.max_grid_X;ii++){
@@ -2081,7 +2088,11 @@ void readXUAPFile(int n, bool firstTime)
                 c=sprintf (name, "%s", pointList.path);
                 c+=sprintf (name+c, "/xuap.");
                 c+=sprintf (name+c, "%1d", n-2+i);
-                fpp = fopen(name,"r");
+                 if (NULL == (fpp = fopen(name,"r"))){
+                     cout<< "\ndid not find xuap file \n";
+                     return ;
+                 }
+                 
                 while(!feof(fpp)){
                    numOfPoints++;
                    fscanf (fpp, "%lf", &left);
@@ -2163,6 +2174,14 @@ void prepare_fast_search()
     c+=sprintf (name+c, "/xuap.");
 	c+=sprintf (name+c, "%1d", pointList.firstFile+pointList.minLeftRight+2);
     fpp = fopen(name,"r");
+    
+    if (NULL == (fpp = fopen(name,"r"))){
+        cout << "\n did not find xuap file \n";
+        return;
+    }
+
+    
+    
     while(!feof(fpp)){
          fscanf (fpp, "%lf", &left);
          fscanf (fpp, "%lf", &right);
