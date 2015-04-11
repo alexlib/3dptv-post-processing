@@ -51,6 +51,7 @@ static void readPTVFile(int n, int index);
 static void read_scanning_PTVFile(int n, int index); // added by Beat March 2013 for scanning
 static void prepare_fast_search();
 static void doCubicSplines(bool single,int number);
+static void doCubicSplinesTwenty(bool single,int number);
 static void setAllMatrixesToZero(int size);
 static void makeAT(int n, int m);
 static void makeATA(int n, int m);
@@ -247,6 +248,14 @@ int main(int argc, char *argv[])
        pointList.maxVel=0.;
        pointList.meanVel=0.;
        pointList.meanAcc=0.;
+        
+        // Added the limit of half number of files for the max lenght of the spline, as
+        // otherwise prescribed by the input.inp instructions
+        
+        if (pointList.PLh > (double)(pointList.lastFile-pointList.firstFile)/2.){
+            pointList.PLh =(double)(pointList.lastFile-pointList.firstFile)/2.;
+        }
+        
 
 	   if(pointList.numSlices>1){
 		   // map slices frame and point id's to cycle frame and point id's
@@ -269,7 +278,8 @@ int main(int argc, char *argv[])
                   readPTVFile(i,ii);
 			  }
           }
-	      doCubicSplines(false,0);
+	      //doCubicSplines(false,0);
+           doCubicSplinesTwenty(false,0);
           writeXUAPFile(i);
 	   }
 	}
@@ -2238,3 +2248,128 @@ void prepare_fast_search()
 	
 }
 
+void doCubicSplinesTwenty(bool single,int number)
+{
+    
+    int PLh=int((double)pointList.PL/2.);
+    int nP=pointList.point[10][0][0];
+    int ind[21];
+    //double tolerance=0.15;//StrToFloat(paramForm->toleranceEdit->Text);
+    double velocity;
+    
+    double weight;
+    
+    int start,end;
+    if(!single){
+        start=1;
+        end=nP;
+    }
+    else{
+        start=number;
+        end=number;
+    }
+    
+    for(int i=start;i<end+1;i++){
+        pointList.point[10][i][14]=0; //can be cubic splined
+        int maxIndex=10;
+        int minIndex=10;
+        int index=10;
+        int badCounter=0;
+        ind[index]=i;
+        bool ok=true;
+        
+        while(index>10-PLh && ok){
+            if(pointList.point[index][ind[index]][0]>0 && pointList.point[index][0][0]>0){
+                ind[index-1]=pointList.point[index][ind[index]][0];
+                index--;
+                minIndex=index;
+            }
+            else{
+                ok=false;
+            }
+        }
+        index=10;
+        ind[index]=i;
+        ok=true;
+        while(index<10+PLh && ok){
+            if(pointList.point[index][ind[index]][1]>0 && pointList.point[index][0][0]>0){
+                ind[index+1]=pointList.point[index][ind[index]][1];
+                index++;
+                maxIndex=index;
+            }
+            else{
+                ok=false;
+            }
+        }
+        
+        //first do for x and u, then do for a
+        if(maxIndex-minIndex>2+badCounter && maxIndex>9+pointList.minLeftRight && minIndex<11-pointList.minLeftRight){
+            //    if(maxIndex-minIndex>2+badCounter && maxIndex>9+minLength && minIndex<11-minLength){
+            
+            //if(maxIndex-minIndex>2+badCounter ){ //ok (minIndex<10 && maxIndex>10){//
+            pointList.point[10][i][14]=1;
+            //x-Component
+            setAllMatrixesToZero(4);
+            for(int t=minIndex-10;t<maxIndex-10+1;t++){
+                weight     = pointList.point[t+10][ind[t+10]][15];
+                weight     = 1.-1./(1.+exp(-300.*(weight-0.015)));
+                pointList.A[t+10][0] = 1.*weight;
+                pointList.A[t+10][1] = (double)t*pointList.deltaT*weight;
+                pointList.A[t+10][2] = pow((double)t*pointList.deltaT,2.)*weight;
+                pointList.A[t+10][3] = pow((double)t*pointList.deltaT,3.)*weight;
+                pointList.y[0][t+10] = pointList.point[t+10][ind[t+10]][2]*weight;
+            }
+            makeAT(21,4);
+            makeATA(21,4);
+            makeATY(21,4,0);
+            solve(21,4);
+            
+            pointList.point[10][i][5]=pointList.X[0];//pointList.point[10][ind[10]][2];//
+            pointList.point[10][i][8]=pointList.X[1];//(1./(2.*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][2]-pointList.point[9][ind[9]][2]);//
+            pointList.point[10][i][11]=2.*pointList.X[2];//(1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][2]-2.*pointList.point[10][ind[10]][2]+pointList.point[9][ind[9]][2]);//
+            //y-Component
+            setAllMatrixesToZero(4);
+            for(int t=minIndex-10;t<maxIndex-10+1;t++){
+                weight     = pointList.point[t+10][ind[t+10]][15];
+                weight     = 1.-1./(1.+exp(-300.*(weight-0.015)));
+                pointList.A[t+10][0] = 1.*weight;
+                pointList.A[t+10][1] = (double)t*pointList.deltaT*weight;
+                pointList.A[t+10][2] = pow((double)t*pointList.deltaT,2.)*weight;
+                pointList.A[t+10][3] = pow((double)t*pointList.deltaT,3.)*weight;
+                pointList.y[0][t+10] = pointList.point[t+10][ind[t+10]][3]*weight;
+            }
+            makeAT(21,4);
+            makeATA(21,4);
+            makeATY(21,4,0);
+            solve(21,4);
+            
+            pointList.point[10][i][6]=pointList.X[0]; //pointList.point[10][ind[10]][3];//
+            pointList.point[10][i][9]=pointList.X[1]; //(1./(2.*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][3]-pointList.point[9][ind[9]][3]);//
+            pointList.point[10][i][12]=2.*pointList.X[2]; //(1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][3]-2.*pointList.point[10][ind[10]][3]+pointList.point[9][ind[9]][3]);//
+            //z-Component
+            setAllMatrixesToZero(4);
+            for(int t=minIndex-10;t<maxIndex-10+1;t++){
+                weight     = pointList.point[t+10][ind[t+10]][15];
+                weight     = 1.-1./(1.+exp(-300.*(weight-0.015)));
+                pointList.A[t+10][0] = 1.*weight;
+                pointList.A[t+10][1] = (double)t*pointList.deltaT*weight;
+                pointList.A[t+10][2] = pow((double)t*pointList.deltaT,2.)*weight;
+                pointList.A[t+10][3] = pow((double)t*pointList.deltaT,3.)*weight;
+                pointList.y[0][t+10] = pointList.point[t+10][ind[t+10]][4]*weight;
+            }
+            makeAT(21,4);
+            makeATA(21,4);
+            makeATY(21,4,0);
+            solve(21,4);
+            
+            pointList.point[10][i][7]=pointList.X[0]; //pointList.point[10][ind[10]][4];//
+            pointList.point[10][i][10]=pointList.X[1];//(1./(2.*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][4]-pointList.point[9][ind[9]][4]);//
+            pointList.point[10][i][13]=2.*pointList.X[2]; //(1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][4]-2.*pointList.point[10][ind[10]][4]+pointList.point[9][ind[9]][4]);//
+            //max break!
+            velocity=pow(pow(pointList.point[10][i][8],2.)+pow(pointList.point[10][i][9],2.)+pow(pointList.point[10][i][10],2.),0.5);
+            if(velocity>pointList.tolMaxVel){
+                pointList.point[10][i][14]=0;
+            }
+        }
+    }
+}
