@@ -8,6 +8,7 @@
 // luethi@ifu.baug.ethz.ch
 //
 // last update/change: August 2011 Marc Wolf
+// last update/change: April 2015 Alex Liberzon @alexlib
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +16,7 @@
 
 This software links 3D particle positions of consequtivee time steps. 
 
-Copyright (C) 2006 Beat Luthi, Risø, Nat. Lab, Denmark
+Copyright (C) 2006 Beat Luthi, Riso, Nat. Lab, Denmark
 
 This program is free software; you can redistribute it and/or modify it under 
 the terms of the GNU General Public License v2, as published by the Free 
@@ -69,10 +70,7 @@ int main(int argc, char *argv[])
 	int deltaFrames,numCycles;
 
 	//begin of read in control parameters
-	///////////////////////////////////////////////////////////////////////////////////
 	if (argc == 1) {
-		//if (NULL == (input = fopen("C:/input.inp","r"))){ 
-		//if (NULL == (input = fopen("D:/PTV/version_March_2013_scanning/input_2905.txt","r"))){ 
 		if (NULL == (input = fopen("input.inp","r"))){ 	
 		    cout<< "\ndid not find input.inp file";
             return 0;
@@ -99,7 +97,7 @@ int main(int argc, char *argv[])
 
 
 	//data
-    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);
+    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);    // path to the ptv_is files
     fscanf(input,"%i",&n); flushline(input);pointList.firstSFile               = n; // the code will compute the cycle numbers,i.e. the firstFile and lastFile by itself
 	fscanf(input,"%i",&n); flushline(input);pointList.lastSFile                = n; // the code will compute the cycle numbers,i.e. the firstFile and lastFile by itself
 	fscanf(input,"%i",&n); flushline(input);pointList.numSlices                = n;
@@ -130,6 +128,11 @@ int main(int argc, char *argv[])
 	fscanf(input,"%i",&n); flushline(input);pointList.max_grid_Y               = n;
 	fscanf(input,"%i",&n); flushline(input);pointList.max_grid_Z               = n;
 	fscanf(input,"%i",&n); flushline(input);pointList.max_grid_C               = n;
+/* the following lines appeared in the post_process.cpp but no input file was found with these 
+ * parameters actually supplied. at the moment the input.inp file that is supplied does not 
+ * have these parameters
+ * leaving it in the code, but adding the warning to the user
+ */
 	flushline(input);
 	fscanf(input,"%f",&e); flushline(input);pointList.xminChamber              = e; //added by Markus, 20.07.2009
 	fscanf(input,"%f",&e); flushline(input);pointList.xmaxChamber              = e;
@@ -140,7 +143,82 @@ int main(int argc, char *argv[])
 	fscanf(input,"%f",&e); flushline(input);pointList.zminChannel              = e;
 	fscanf(input,"%f",&e); flushline(input);pointList.zmaxChannel              = e;
 	fscanf(input,"%f",&e); flushline(input);pointList.yChamberChannel          = e;
-	
+
+    
+    cout<< "\n Warning: the input file does not include xminChamber and following parameters \n";
+    cout<< "\n ----------------------------------------------------------------------- \n";
+
+/* 
+ 1	                          %make xuap.* files?
+ 1	                          %make trajPoint.* files?
+ 0	                          %make derivatives?
+ 0	                          %make p_trajPoint.* files?
+ 0	                          %make H_trajPoint.* files?
+ /Users/alex/Documents/OpenPTV/3d-ptv-post-process/test_data/                   %path where ptv_is.* files are
+ 101000	                      %firstFile,
+ 101007s                        %lastFile
+ 1  	                          %num slices, if set to 1 it is like normal PTV, i.e. non-scanning, 18 for jet
+ 0		                      %delta_t between slices, set to 0 if num_slices=1
+ 0.01                          %delta_t scan, also use this for non-scanning data, 0.01 sec = 100 fps
+ 0.000001	                  %viscosity - water
+ 21                            %max lenght of polynomial, can go up to half of numOfFrames MARC: 81 up to 100
+ 0                             %min left/right                                             MARC: 15
+ 0.5                           %max_vel, meters/second
+ 0.0025                        %radius for interpolation sphere, [meters]
+ 0.4                           %weight for rel diva-2Q error, these values are reasonable
+ 0.4                           %weight for rel acceleration error
+ 0.2                           %weight for rel divu error
+ ---its better if you don't touch the following-----------------------------
+ 3                             %minTrajLength
+ 35                            %polynomial constant (to choose polynomial order, Beat's Diss eq. 2.29, 35)
+ 10.0                          %c1 (constant Beat's Diss eq. 2.31, 10)
+ 0.25                          %c2 (constant Beat's Diss eq. 2.31, 0.25)
+ 30                            %max num points for linear interpolation (maxRank)
+ 200                           %numOfFrames in memory, also= maxTrajLength  (max=166), ... dont like this..
+ 18                            %max_grid_X
+ 18                            %max_grid_Y
+ 9                             %max_grid_Z
+ 25                            %max_grid_C
+ 
+*/
+    cout<< "\n ----------------------------------------------------------------------- \n";
+    cout << " \t Repeating the configuration file: \n";
+    cout << "write xuap files: " << pointList.xuap << "\n";
+    cout << "write trajPoint files: " << pointList.traj_point << "\n";
+    cout << "write derivatives (11 or 33 cols): " << pointList.derivatives << "\n";
+    cout << "write pressure: " << pointList.pressure << "\n";
+    cout << "write pressure Hessian: " << pointList.Hessian << "\n";
+    cout << "the path : " << pointList.path << "\n";
+    cout << "from frame:" << pointList.firstSFile << "\n";
+    cout << "to frame:" << pointList.lastSFile << "\n";
+    cout << "number of slices: " << pointList.numSlices << "\n";
+    cout << "delta t between slices: " << pointList.deltaT_between_slice << "\n";
+    cout << "delta t scan (or just delta t): " << pointList.deltaT << "\n";
+    cout << "viscosity: " << pointList.viscosity << "\n";
+    cout << "max. polynom: " << pointList.PL << "\n";
+    cout << "trim from edges: " << pointList.minLeftRight << "\n";
+    cout << "max. velocity: " << pointList.tolMaxVel << " [m/s] \n";
+    cout << "interpolation sphere R: " << pointList.maxRadius << " [m] \n";
+    
+    cout << " Quality control: \n";
+    cout << "div(a)-2Q tol : " << pointList.weDiv << "\n";
+    cout << "relative accel. tol.: " << pointList.weAcc << "\n";
+    cout << "velocity divergence tol.: " << pointList.weVel << "\n";
+    
+    cout << "shortest trajectory: " << pointList.minTrajLength << " [frames] \n";
+    
+    cout << " Informative parameters (do not change if you do not know what you are doing ! \n";
+    
+    cout << "polynomial length constant:" << pointList.polyConst << " \n";
+    cout << "polynomial constant c1:" << pointList.c1 << " \n";
+    cout << "polynomial constant c2:" << pointList.c2 << " \n";
+    cout << "num of frames in memory:" << pointList.numOfFrames << " \n";
+    cout << "grid (X,Y) :" << pointList.max_grid_X << "\t" << pointList.max_grid_Y << " \n";
+    cout << "grid (Z,C) :" << pointList.max_grid_Z << "\t" << pointList.max_grid_C << " \n";
+
+    
+    cout<< "\n ----------------------------------------------------------------------- \n";
+    
 	//end of read in control parameters
 	///////////////////////////////////////////////////////////////////////////////////
 
@@ -174,7 +252,7 @@ int main(int argc, char *argv[])
 		   map_slices_to_cycles();
 	   }
 
-       for (int i=pointList.firstFile;i<pointList.lastFile+1;i++){
+       for (int i=pointList.firstFile;i<=pointList.lastFile;i++){
 		   if(i % ((int)((double)20/(double)pointList.numSlices)+1) == 0){
              cout << "processing file ........."<<i<<"\n";
              cout << "max Vel.................."<<pointList.maxVel<<"\n";
@@ -287,7 +365,7 @@ void readPTVFile(int n, int index)
 	int c;
     int numOfPoints;
 	int left,right;
-    double x,y,z,rmsDist;
+    double x,y,z,rmsDist=0.005; // probably 5 mm - to ask Beat, AL 04.15
 
     char name[256];
 
@@ -305,13 +383,12 @@ void readPTVFile(int n, int index)
            fscanf (fpp, "%lf", &x);
            fscanf (fpp, "%lf", &y);
            fscanf (fpp, "%lf", &z);
-           rmsDist=0.005;
-		   pointList.point[index+pointList.PLh][i][0]=left+1;//;//
-		   pointList.point[index+pointList.PLh][i][1]=right+1;//;//
+		   pointList.point[index+pointList.PLh][i][0]=left+1;  // previous
+		   pointList.point[index+pointList.PLh][i][1]=right+1; // next
 
-           pointList.point[index+pointList.PLh][i][2]=x*0.001;//;//
-           pointList.point[index+pointList.PLh][i][3]=y*0.001;//;//
-           pointList.point[index+pointList.PLh][i][4]=z*0.001;//;//
+           pointList.point[index+pointList.PLh][i][2]=x*0.001; // to meters
+           pointList.point[index+pointList.PLh][i][3]=y*0.001;
+           pointList.point[index+pointList.PLh][i][4]=z*0.001;
            pointList.point[index+pointList.PLh][i][15]=rmsDist;
       }
        fclose (fpp);
@@ -327,7 +404,7 @@ void read_scanning_PTVFile(int n, int index)
 	int c;
     int numOfPoints;
     int fid_left,left,fid_right,right,cid,id,cpid,left_pid,right_pid;
-    double x,y,z,rmsDist;
+    double x,y,z,rmsDist=0.005;
 
     char name[256];
 
@@ -354,7 +431,7 @@ void read_scanning_PTVFile(int n, int index)
                fscanf (fpp, "%lf", &x);
                fscanf (fpp, "%lf", &y);
                fscanf (fpp, "%lf", &z);
-               rmsDist=0.005;
+               
 
 			   cid       = n+index;
 			   cpid      = 1+pointList.map_slice_cycle[id-pointList.firstFile][i];
