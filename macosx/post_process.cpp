@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 	fscanf(input,"%i",&n); flushline(input); if(n==1){pointList.traj_point=true;}		else{pointList.traj_point=false;}
 
 	//data
-    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,pa);
+    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);
     fscanf(input,"%i",&n); flushline(input);pointList.firstFile                = n;
 	fscanf(input,"%i",&n); flushline(input);pointList.lastFile                 = n;
 
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 		  }
 		  cout << "processing file .............."<<i<<"\n";
 		   
-          c=sprintf (name, pointList.path);
+          c=sprintf (name, "%s", pointList.path);
 	      c+=sprintf (name+c, "/trajPoint.");
           c+=sprintf (name+c, "%1d", i); 
           fpp = fopen(name,"w");
@@ -198,19 +198,19 @@ void readPTVFile(int n, int index)
     char name[256];
 
     if(n+index>pointList.firstFile-1 && n+index<pointList.lastFile+1){
-       c=sprintf (name, pointList.path);
+       c=sprintf (name, "%s", pointList.path);
 	   c+=sprintf (name+c, "/ptv_is.");
        c+=sprintf (name+c, "%1d", n+index); 
        
        fpp = fopen(name,"r");
-       fscanf (fpp, "%d\0", &numOfPoints);
+       fscanf (fpp, "%d", &numOfPoints);
        pointList.point[index+10][0][0]=numOfPoints;
        for (int i=1; i<numOfPoints+1; i++){
-           fscanf (fpp, "%d\0", &left);
-           fscanf (fpp, "%d\0", &right);
-           fscanf (fpp, "%lf\0", &x);
-           fscanf (fpp, "%lf\0", &y);
-           fscanf (fpp, "%lf\0", &z);
+           fscanf (fpp, "%d", &left);
+           fscanf (fpp, "%d", &right);
+           fscanf (fpp, "%lf", &x);
+           fscanf (fpp, "%lf", &y);
+           fscanf (fpp, "%lf", &z);
            rmsDist=0.005;
            pointList.point[index+10][i][0]=left+1;
            pointList.point[index+10][i][1]=right+1;
@@ -508,7 +508,7 @@ void writeXUAPFile(int t)
     char name[256];
     int c;
 
-    c=sprintf (name, pointList.path);
+    c=sprintf (name, "%s", pointList.path);
     c+=sprintf (name+c, "/xuap.");
     c+=sprintf (name+c, "%1d", t);
 
@@ -1433,27 +1433,27 @@ void readXUAPFile(int n, bool firstTime)
              }
              else{
                 numOfPoints=0;
-                c=sprintf (name, pointList.path);
+                c=sprintf (name, "%s", pointList.path);
                 c+=sprintf (name+c, "/xuap.");
                 c+=sprintf (name+c, "%1d", n-2+i);
                 fpp = fopen(name,"r");
                 while(!feof(fpp)){
                    numOfPoints++;
-                   fscanf (fpp, "%lf\0", &left);
-                   fscanf (fpp, "%lf\0", &right);
-                   fscanf (fpp, "%lf\0", &dummy); //measured x
-                   fscanf (fpp, "%lf\0", &dummy); //measured y
-                   fscanf (fpp, "%lf\0", &dummy); //measured z
-                   fscanf (fpp, "%lf\0", &x); //cubic spline x
-                   fscanf (fpp, "%lf\0", &y); //cubic spline y
-                   fscanf (fpp, "%lf\0", &z); //cubic spline z
-                   fscanf (fpp, "%lf\0", &u);
-                   fscanf (fpp, "%lf\0", &v);
-                   fscanf (fpp, "%lf\0", &w);
-                   fscanf (fpp, "%lf\0", &ax);
-                   fscanf (fpp, "%lf\0", &ay);
-                   fscanf (fpp, "%lf\0", &az);
-                   fscanf (fpp, "%lf\0", &cubic);
+                   fscanf (fpp, "%lf", &left);
+                   fscanf (fpp, "%lf", &right);
+                   fscanf (fpp, "%lf", &dummy); //measured x
+                   fscanf (fpp, "%lf", &dummy); //measured y
+                   fscanf (fpp, "%lf", &dummy); //measured z
+                   fscanf (fpp, "%lf", &x); //cubic spline x
+                   fscanf (fpp, "%lf", &y); //cubic spline y
+                   fscanf (fpp, "%lf", &z); //cubic spline z
+                   fscanf (fpp, "%lf", &u);
+                   fscanf (fpp, "%lf", &v);
+                   fscanf (fpp, "%lf", &w);
+                   fscanf (fpp, "%lf", &ax);
+                   fscanf (fpp, "%lf", &ay);
+                   fscanf (fpp, "%lf", &az);
+                   fscanf (fpp, "%lf", &cubic);
                    pointList.point[i][numOfPoints][0]=left;
                    pointList.point[i][numOfPoints][1]=right;
                    pointList.point[i][numOfPoints][2]=x;

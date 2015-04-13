@@ -1,9 +1,9 @@
 1	                      %make xuap.* files?                
 1	                      %make trajPoint.* files? 
-../../postptv/hristo-data/    %path where ptv_is.* files are
-10001	                  %firstFile                
-10144	                  %lastFile                 
-0.02	                  %delta_t 2 msec - just a guess
+/Users/alex/Documents/OpenPTV/3d-ptv-post-process/test_data/    %path where ptv_is.* files are
+101000	                  %firstFile                
+101025	                  %lastFile                 
+0.01	                  %delta_t 2 msec - just a guess
 0.000001	              %viscosity - water
 5                        %max lenght of polynomial
 1                         %min left/right                 
