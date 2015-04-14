@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
                 cout << "mean Vel................."<<pointList.meanVel<<"\n";
                 cout << "mean Acc................."<<pointList.meanAcc<<"\n\n";
             }
-            for (int ii=-pointList.PLh;ii<pointList.PLh+1;ii++){
+              for (int ii=-pointList.PLh;ii<pointList.PLh+1;ii++){
                 if(pointList.numSlices>1){
                     // read in scanned ptv_is files
                     read_scanning_PTVFile(i,ii);
@@ -279,8 +279,8 @@ int main(int argc, char *argv[])
                 else{ //business as usual, no scanning
                     readPTVFile(i,ii);
                 }
-            }
-            // doCubicSplines(false,0);
+              }
+            doCubicSplines(false,0);
             writeXUAPFile(i);
         }
     }
@@ -901,7 +901,7 @@ void writeXUAPFile(int t)
     
     fpp = fopen(name,"w");
     
-    for(int i=1;i<pointList.point[pointList.PLh][0][0];i++){
+    for(int i=1;i<=pointList.point[pointList.PLh][0][0];i++){
         if(pointList.point[pointList.PLh][i][14]>0){
             pointList.count++;
             double vel=pow( pow(pointList.point[pointList.PLh][i][8],2.)
@@ -2050,10 +2050,6 @@ void readXUAPFile(int n, bool firstTime)
     
     
     for(int i=0;i<pointList.numOfFrames;i++){
-        
-        
-        
-        
         if(n-2+i>pointList.firstFile-1 && n-2+i<pointList.lastFile+1){
             if(i<pointList.numOfFrames-1 && !(firstTime)){
                 //write xuag

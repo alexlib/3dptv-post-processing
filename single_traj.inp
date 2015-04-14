@@ -1,4 +1,4 @@
-0	                          %make xuap.* files?       % has to be 1 - no other option is working         
+1	                          %make xuap.* files?       % has to be 1 - no other option is working         
 1	                          %make trajPoint.* files?  % cannot be 1 if xuap is zero
 0   	                      %make derivatives?
 0	                          %make p_trajPoint.* files? % does not working in this version
@@ -10,7 +10,7 @@
 0		                      %delta_t between slices, set to 0 if num_slices=1
 0.01                          %delta_t scan, also use this for non-scanning data, 0.01 sec = 100 fps
 0.000001	                  %viscosity - water
-0                             %max lenght of polynomial, up to half of numOfFrames, automatically restricted. 0 -> no spline 
+5                             %max lenght of polynomial, up to half of numOfFrames, automatically restricted. 0 -> no spline 
 0                             %min left/right                                             MARC: 15        
 1.5                           %max_vel, meters/second 
 0.0025                        %radius for interpolation sphere, [meters]
