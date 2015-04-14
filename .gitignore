@@ -6,3 +6,6 @@ test_data/trajPoint.*
 test_data/xuap.*
 test_data/xuag.*
 
+single_traj/trajPoint.*
+single_traj/xua*.*
+xcodeproject
