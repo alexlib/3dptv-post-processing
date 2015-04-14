@@ -10,7 +10,7 @@
 0		                      %delta_t between slices, set to 0 if num_slices=1
 0.01                          %delta_t scan, also use this for non-scanning data, 0.01 sec = 100 fps
 0.000001	                  %viscosity - water
-5                             %max lenght of polynomial, up to half of numOfFrames, automatically restricted. 0 -> no spline 
+15                             %max lenght of polynomial, up to half of numOfFrames, automatically restricted. 0 -> no spline 
 0                             %min left/right                                             MARC: 15        
 1.5                           %max_vel, meters/second 
 0.0025                        %radius for interpolation sphere, [meters]
@@ -18,12 +18,12 @@
 0.4                           %weight for rel acceleration error
 0.2                           %weight for rel divu error
 ---its better if you don't touch the following-----------------------------
-0                            %minTrajLength 
+1                             %minTrajLength 
 35                            %polynomial constant (to choose polynomial order, Beat's Diss eq. 2.29, 35)
 10.0                          %c1 (constant Beat's Diss eq. 2.31, 10)
 0.25                          %c2 (constant Beat's Diss eq. 2.31, 0.25)
 30                            %max num points for linear interpolation (maxRank)
-200                           %numOfFrames in memory, also= maxTrajLength  (max=166), ... dont like this..
+166                           %numOfFrames in memory, also= maxTrajLength  (max=166), ... dont like this..
 18                            %max_grid_X   
 18                            %max_grid_Y
 9                             %max_grid_Z  

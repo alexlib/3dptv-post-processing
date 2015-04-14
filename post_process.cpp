@@ -901,7 +901,7 @@ void writeXUAPFile(int t)
     
     fpp = fopen(name,"w");
     
-    for(int i=1;i<=pointList.point[pointList.PLh][0][0];i++){
+    for(int i=1;i<pointList.point[pointList.PLh][0][0]+1;i++){
         if(pointList.point[pointList.PLh][i][14]>0){
             pointList.count++;
             double vel=pow( pow(pointList.point[pointList.PLh][i][8],2.)
@@ -987,7 +987,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
     
     
     int n;
-    for(int nn=start;nn<end;nn++){
+    for(int nn=start;nn<=end;nn++){
         time=2; // is set to 2 to calculate local acc
         /*if(end>5000){
          if(nn % 2000 == 0){
@@ -2029,7 +2029,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
 
 void readXUAPFile(int n, bool firstTime)
 {
-    int numOfPoints;
+    int numOfPoints = 0,nret;
     double left,right,x,y,z,u,v,w,ax,ay,az,dummy,cubic;
     
     FILE *fpp;
@@ -2046,12 +2046,14 @@ void readXUAPFile(int n, bool firstTime)
     
     int ind_X,ind_Y,ind_Z,ind_C,dummy_count;
     
+    int numfields = 15;
+    
     dummy_count=0;
     
     
     for(int i=0;i<pointList.numOfFrames;i++){
         if(n-2+i>pointList.firstFile-1 && n-2+i<pointList.lastFile+1){
-            if(i<pointList.numOfFrames-1 && !(firstTime)){
+            if(i<pointList.numOfFrames-1 && !(firstTime)){ // not to use the edge points ? AL 14.04.15
                 //write xuag
                 if(i==2){
                     fpp_xuag = fopen(name_xuag,"w");
@@ -2103,22 +2105,25 @@ void readXUAPFile(int n, bool firstTime)
                 }
                 
                 while(!feof(fpp)){
-                    numOfPoints++;
-                    fscanf (fpp, "%lf", &left);
-                    fscanf (fpp, "%lf", &right);
-                    fscanf (fpp, "%lf", &dummy); //measured x
-                    fscanf (fpp, "%lf", &dummy); //measured y
-                    fscanf (fpp, "%lf", &dummy); //measured z
-                    fscanf (fpp, "%lf", &x); //cubic spline x
-                    fscanf (fpp, "%lf", &y); //cubic spline y
-                    fscanf (fpp, "%lf", &z); //cubic spline z
-                    fscanf (fpp, "%lf", &u);
-                    fscanf (fpp, "%lf", &v);
-                    fscanf (fpp, "%lf", &w);
-                    fscanf (fpp, "%lf", &ax);
-                    fscanf (fpp, "%lf", &ay);
-                    fscanf (fpp, "%lf", &az);
-                    fscanf (fpp, "%lf", &cubic);
+                    while(numfields==(nret=fscanf(fpp,"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+                                    &left,&right,&dummy,&dummy,&dummy,&x,&y,&z,&u,&v,&w,&ax,&ay,&az,&cubic))){
+                        numOfPoints++;
+                    
+//                    fscanf (fpp, "%lf", &left);
+//                    fscanf (fpp, "%lf", &right);
+//                    fscanf (fpp, "%lf", &dummy); //measured x
+//                    fscanf (fpp, "%lf", &dummy); //measured y
+//                    fscanf (fpp, "%lf", &dummy); //measured z
+//                    fscanf (fpp, "%lf", &x); //cubic spline x
+//                    fscanf (fpp, "%lf", &y); //cubic spline y
+//                    fscanf (fpp, "%lf", &z); //cubic spline z
+//                    fscanf (fpp, "%lf", &u);
+//                    fscanf (fpp, "%lf", &v);
+//                    fscanf (fpp, "%lf", &w);
+//                    fscanf (fpp, "%lf", &ax);
+//                    fscanf (fpp, "%lf", &ay);
+//                    fscanf (fpp, "%lf", &az);
+//                    fscanf (fpp, "%lf", &cubic);
                     pointList.point[i][numOfPoints][0]=left;
                     pointList.point[i][numOfPoints][1]=right;
                     pointList.point[i][numOfPoints][2]=x;
@@ -2153,6 +2158,7 @@ void readXUAPFile(int n, bool firstTime)
                         }
                     }
                     
+                }
                 }
                 fclose (fpp);
                 pointList.point[i][0][0]=numOfPoints;
