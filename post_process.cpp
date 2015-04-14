@@ -2103,27 +2103,12 @@ void readXUAPFile(int n, bool firstTime)
                     cout<< "\ndid not find xuap file \n";
                     return ;
                 }
-                
+                // read http://stackoverflow.com/questions/5431941/why-is-while-feof-file-always-wrong
                 while(!feof(fpp)){
                     while(numfields==(nret=fscanf(fpp,"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
                                     &left,&right,&dummy,&dummy,&dummy,&x,&y,&z,&u,&v,&w,&ax,&ay,&az,&cubic))){
                         numOfPoints++;
-                    
-//                    fscanf (fpp, "%lf", &left);
-//                    fscanf (fpp, "%lf", &right);
-//                    fscanf (fpp, "%lf", &dummy); //measured x
-//                    fscanf (fpp, "%lf", &dummy); //measured y
-//                    fscanf (fpp, "%lf", &dummy); //measured z
-//                    fscanf (fpp, "%lf", &x); //cubic spline x
-//                    fscanf (fpp, "%lf", &y); //cubic spline y
-//                    fscanf (fpp, "%lf", &z); //cubic spline z
-//                    fscanf (fpp, "%lf", &u);
-//                    fscanf (fpp, "%lf", &v);
-//                    fscanf (fpp, "%lf", &w);
-//                    fscanf (fpp, "%lf", &ax);
-//                    fscanf (fpp, "%lf", &ay);
-//                    fscanf (fpp, "%lf", &az);
-//                    fscanf (fpp, "%lf", &cubic);
+                        
                     pointList.point[i][numOfPoints][0]=left;
                     pointList.point[i][numOfPoints][1]=right;
                     pointList.point[i][numOfPoints][2]=x;
