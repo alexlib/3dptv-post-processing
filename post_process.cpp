@@ -983,7 +983,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
     
     
     start=1;
-    end=(int)(pointList.point[2][0][0]+0.5); // 1. field tells number of rows
+    end=(int)(pointList.point[2][0][0]+0.5); // 1. field tells number of rows // why it's [2]s AL 15.4.15?
     
     
     int n;
@@ -2057,7 +2057,7 @@ void readXUAPFile(int n, bool firstTime)
                 //write xuag
                 if(i==2){
                     fpp_xuag = fopen(name_xuag,"w");
-                    for(int j=1;j<pointList.point[2][0][0]+1;j++){           
+                    for(int j=1;j<pointList.point[2][0][0]+1;j++){        // why pointList.point[2] ?? AL 15.4.15
                         for(int arg=0;arg<36;arg++){
                             fprintf(fpp_xuag, "%lf\t", pointList.point[2][j][arg]);
                         }
