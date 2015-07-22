@@ -9,3 +9,4 @@ test_data/xuag.*
 single_traj/trajPoint.*
 single_traj/xua*.*
 xcodeproject
+post_process_exe
