@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// this code was written by Beat Luthi at IfU, ETH Zürich, Okt 2007
+// this code was written by Beat Luthi at IfU, ETH Zï¿½rich, Okt 2007
 //
 // is represents an attempt to have ONE clean non-GUI version of the postPorcessing codes
 // that float around in various Borland versions
@@ -98,6 +98,8 @@ int main(int argc, char *argv[])
     
     //data
     fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);    // path to the ptv_is files
+    printf("path to the ptv_is files: %s\n",pointList.path);
+    
     fscanf(input,"%i",&n); flushline(input);pointList.firstSFile               = n; // the code will compute the cycle numbers,i.e. the firstFile and lastFile by itself
     fscanf(input,"%i",&n); flushline(input);pointList.lastSFile                = n; // the code will compute the cycle numbers,i.e. the firstFile and lastFile by itself
     fscanf(input,"%i",&n); flushline(input);pointList.numSlices                = n;
@@ -389,7 +391,7 @@ void readPTVFile(int n, int index)
         fpp = fopen(name,"r");
         fscanf (fpp, "%d", &numOfPoints);
         pointList.point[index+pointList.PLh][0][0]=numOfPoints;
-        for (int i=1; i<numOfPoints+1; i++){ //these lines 218-231 müssen geändert werden
+        for (int i=1; i<numOfPoints+1; i++){ //these lines 218-231 mï¿½ssen geï¿½ndert werden
             fscanf (fpp, "%d", &left);
             fscanf (fpp, "%d", &right);
             fscanf (fpp, "%lf", &x);
@@ -435,7 +437,7 @@ void read_scanning_PTVFile(int n, int index)
             c+=sprintf (name+c, "%1d", id); // <--and now we have cid mapped to id
             fpp = fopen(name,"r");
             fscanf (fpp, "%d", &numOfPoints);
-            for (int i=0; i<numOfPoints; i++){ //these lines 218-231 müssen geändert werden
+            for (int i=0; i<numOfPoints; i++){ //these lines 218-231 mï¿½ssen geï¿½ndert werden
                 fscanf (fpp, "%d",  &fid_left);
                 fscanf (fpp, "%d",  &left);
                 fscanf (fpp, "%d",  &fid_right);
@@ -1009,7 +1011,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                 //interpolieren und rausschreiben mit t,n (Zeit und Startpunkt)
                 //%Da soll jetzt duidxj linear interpoliert werden
                 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                //%die nächsten Punkte zu Punkt x,y,z, finden
+                //%die nï¿½chsten Punkte zu Punkt x,y,z, finden
                 pointList.count++;
                 setAllMatrixesToZero(4);
                 contin=true;
@@ -1189,7 +1191,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                     pCounterC=0;
                     
                     int i;
-                    // Abfüllen der überbestimmten linearen Gleichungssyteme (3 Zeitschritte)
+                    // Abfï¿½llen der ï¿½berbestimmten linearen Gleichungssyteme (3 Zeitschritte)
                     for(int pointInd=0;(pointInd<pointList.maxRank) && (minDistA[pointInd]<pointList.maxRadius);pointInd++){
                         i=minDistAIndex[pointInd]; // for-loop through all points with radius smaller than maxRadius
                         if(pointList.point[time-1][i][11]>0.){ // Zeitschritt i-1
@@ -1197,7 +1199,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                             dx=pointList.point[time-1][i][2]-centerX; //deviation from the meas. point
                             dy=pointList.point[time-1][i][3]-centerY;
                             dz=pointList.point[time-1][i][4]-centerZ;
-                            pointList.A[pCounterA][0]=1.; // auffüllen A Matrix linearer Ansatz
+                            pointList.A[pCounterA][0]=1.; // auffï¿½llen A Matrix linearer Ansatz
                             pointList.A[pCounterA][1]=dx;
                             pointList.A[pCounterA][2]=dy;
                             pointList.A[pCounterA][3]=dz;
@@ -1262,7 +1264,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                     if(pCounterA>minCounter && pCounterB>minCounter && pCounterC>minCounter){ // %jetzt wird endlich Punkt1 interpoliert
                         //%correct x,y,z with center of interpolation!
                         
-                        makeBT(pCounterB,4);  // Gegenwart: räumliche Ableitungen für Geschw. und Beschl.
+                        makeBT(pCounterB,4);  // Gegenwart: rï¿½umliche Ableitungen fï¿½r Geschw. und Beschl.
                         makeBTB(pCounterB,4);
                         makeBTY(pCounterB,4,1);
                         solveB(pCounterB,4);
@@ -1387,7 +1389,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                         div=fabs(trace);
                         ref=fabs(s11)+fabs(s22)+fabs(s33);
                         
-                        //acceleration quality: Vorbereitung für polynomial fits
+                        //acceleration quality: Vorbereitung fï¿½r polynomial fits
                         Dx=Liax[0];lx=Liu[4];cx=Liu[0]*Liu[1]+Liv[0]*Liu[2]+Liw[0]*Liu[3];
                         Dy=Liay[0];ly=Liv[4];cy=Liu[0]*Liv[1]+Liv[0]*Liv[2]+Liw[0]*Liv[3];
                         Dz=Liaz[0];lz=Liw[4];cz=Liu[0]*Liw[1]+Liv[0]*Liw[2]+Liw[0]*Liw[3];
@@ -1408,7 +1410,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                         diva=Liax[1]+Liay[2]+Liaz[3];
                         ref_diva=fabs((1./4.)*wsq)+fabs((1./4.)*twosijsij)+fabs(Liax[1])+fabs(Liay[2])+fabs(Liaz[3]); // Beat und Marc Juni 2011: (1./4.)*
                         
-                        // Vorbereitung für polynomial fit
+                        // Vorbereitung fï¿½r polynomial fit
                         pointList.traj[numInTraj][ 0]=pointList.point[time][n][2];
                         pointList.traj[numInTraj][ 1]=pointList.point[time][n][3];
                         pointList.traj[numInTraj][ 2]=pointList.point[time][n][4];
@@ -1446,7 +1448,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                             pointList.traj[numInTraj][30]=pointList.weDiv*fabs(2*Q+diva)/ref_diva+pointList.weAcc*absDi+pointList.weVel*div/ref;
                         }
                         else{
-                            pointList.traj[numInTraj][30]=0.95; // Gewichtung für Punkte bei denen docubicspline und/oder die räumliche Interpolation nicht geklappt hat
+                            pointList.traj[numInTraj][30]=0.95; // Gewichtung fï¿½r Punkte bei denen docubicspline und/oder die rï¿½umliche Interpolation nicht geklappt hat
                         }
                         if(pointList.traj[numInTraj][30]>0.95){
                             pointList.traj[numInTraj][30]=0.95;
@@ -1455,7 +1457,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                         
                     }// end of if pCOunter>3 solve...
                     
-                    // Catch falls räumliche Interpolation versagt: es werden dennoch die Informationen verwendet, die da sind,
+                    // Catch falls rï¿½umliche Interpolation versagt: es werden dennoch die Informationen verwendet, die da sind,
                     // d.h. alle Punkte der Trajektorie werden verwendet
                     if(!(pCounterA>minCounter && pCounterB>minCounter && pCounterC>minCounter ) || !(contin)){
                         pointList.traj[numInTraj][ 0]=pointList.point[time][n][2];
@@ -1511,12 +1513,12 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                     pointList.traj[numInTraj][ 9]=(double)n;
                 }
                 
-                numInTraj++; //da sollte doch irgendein check sein, wenn numFrames überschritten wird, i.e. max trajlength erreicht ist.
+                numInTraj++; //da sollte doch irgendein check sein, wenn numFrames ï¿½berschritten wird, i.e. max trajlength erreicht ist.
                 
-                //schauen ob's einen nächsten gibt
+                //schauen ob's einen nï¿½chsten gibt
                 if(pointList.point[time][n][1]>0 && time<pointList.lastFile-pointList.firstFile && time<pointList.numOfFrames-2){ //Beat March 2013, perhaps now the trajectories don't have these strange links
                     n=pointList.point[time][n][1];
-                    time++; //da sollte doch irgendein check sein, wenn numFrames überschritten wird, i.e. max trajlength erreicht ist.
+                    time++; //da sollte doch irgendein check sein, wenn numFrames ï¿½berschritten wird, i.e. max trajlength erreicht ist.
                     if( pointList.point[time][n][11]<1. ){
                         ok=false;
                     }
@@ -1528,7 +1530,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
             
             if(pointList.derivatives){
                 
-                // Wenn eine Trajektorie fertig ist, dann wird weighted polynomial fit durchgeführt
+                // Wenn eine Trajektorie fertig ist, dann wird weighted polynomial fit durchgefï¿½hrt
                 
                 if(numInTraj-pointList.noDeriv>pointList.minTrajLength-1){   //Wichtig
                     /////polynom business////////////////////////////////////////
@@ -1569,7 +1571,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                         pointList.we[ii]=1.-1./(1.+exp(-pointList.c1*(pointList.traj[ii][30]-pointList.c2)));//reldiv(ii) (Beat's Diss eq. 2.30)
                     }
                     
-                    // Abfüllen der Matrix
+                    // Abfï¿½llen der Matrix
                     for(int ii=0;ii<numInTraj;ii++){
                         for(int ij=0;ij<order;ij++){
                             pointList.A[ii][ij]=pointList.we[ii]*pow((double)ii*pointList.deltaT+0.000000001,(double)(ij));
@@ -1833,7 +1835,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                         
                     }// end for loop through traj
                     
-                    // Statistik für den Zuschauer
+                    // Statistik fï¿½r den Zuschauer
                     for(int ii=0;ii<numInTraj;ii++){
                         USq=up[ii]*up[ii]+vp[ii]*vp[ii]+wp[ii]*wp[ii];
                         
@@ -1852,7 +1854,7 @@ void followTrajPoint(FILE *fpp, int t,int startPoint)
                         s331=s33p[ii]*s13p[ii]*s13p[ii];
                         s332=s33p[ii]*s23p[ii]*s23p[ii];
                         s123=s12p[ii]*s23p[ii]*s13p[ii];
-                        sijsjkski=s111+s222+s333+3.*(s112+s113+s221+s223+s331+s332)+6.*s123; // mal überprüfen...
+                        sijsjkski=s111+s222+s333+3.*(s112+s113+s221+s223+s331+s332)+6.*s123; // mal ï¿½berprï¿½fen...
                         
                         wsq=w1p[ii]*w1p[ii]+w2p[ii]*w2p[ii]+w3p[ii]*w3p[ii];
                         twosijsij=2.*(s11p[ii]*s11p[ii]+s22p[ii]*s22p[ii]+s33p[ii]*s33p[ii]

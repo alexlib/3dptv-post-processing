@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "g++",
+        "args": [
+          "-g",
+          "post_process.cpp",
+          "-o",
+          "post_process"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"]
+      }
+    ]
+  }
