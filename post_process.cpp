@@ -1930,7 +1930,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             fprintf(fpp, "%lf\t", dazdyp[ii]);  //  29
             fprintf(fpp, "%lf\t", dazdzp[ii]);  //  30
             fprintf(fpp, "%lf\t", quality);  //  31 0=good, 1=bad
-            fprintf(fpp, "%lf\t", (double)(ii));  //  32 age along trajectory
+            fprintf(fpp, "%lf\t", static_cast<double>(ii));  //  32 age along trajectory
             fprintf(fpp, "%lf\n",
                     pointList.traj[ii][9]);  //  33 reference to index in rt_is,
                                             // ptv_is, xuap files
@@ -1984,9 +1984,9 @@ void readXUAPFile(int n, bool firstTime) {
   FILE *fpp_xuag;
   char name_xuag[256];
   int c_xuag;
-  c_xuag = sprintf(name_xuag, pointList.path);
-  c_xuag += sprintf(name_xuag + c_xuag, "/xuag.");
-  c_xuag += sprintf(name_xuag + c_xuag, "%1d", n - 1);
+  c_xuag = snprintf(name_xuag, sizeof(name_xuag), "%s", pointList.path);
+  c_xuag += snprintf(name_xuag + c_xuag, sizeof(name_xuag) - c_xuag, "/xuag.");
+  c_xuag += snprintf(name_xuag + c_xuag, sizeof(name_xuag) - c_xuag, "%1d", n - 1);
 
   for (int i = 0; i < pointList.numOfFrames; i++) {
     if (n - 2 + i > pointList.firstFile - 1 &&
@@ -2075,9 +2075,9 @@ void readXUAGFile(int n, bool firstTime) {
         }
       } else {
         numOfPoints = 0;
-        c = sprintf(name, pointList.path);
-        c += sprintf(name + c, "/xuag.");
-        c += sprintf(name + c, "%1d", n - 2 + i);
+        c = snprintf(name, sizeof(name), "%s", pointList.path);
+        c += snprintf(name + c, sizeof(name) - c, "/xuag.");
+        c += snprintf(name + c, sizeof(name) - c, "%1d", n - 2 + i);
         fpp = fopen(name, "r");
         while (!feof(fpp)) {
           numOfPoints++;
