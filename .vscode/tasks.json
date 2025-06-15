@@ -6,8 +6,9 @@
         "type": "shell",
         "command": "g++",
         "args": [
-          "-g",
+          "-g", // This enables debugging symbols
           "post_process.cpp",
+          "stdafx.cpp", // Make sure all necessary source files are listed
           "-o",
           "post_process"
         ],
