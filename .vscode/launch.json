@@ -6,7 +6,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/post_process",
-        "args": ["single_traj.inp"], // Use the input file that causes the crash
+        "args": ["input.inp"], // Use the input file that causes the crash
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
         "environment": [],
