@@ -93,34 +93,25 @@ run_golden_test "test_data_inp" "test_data.inp"   # New test for test_data
 
 echo "All golden tests attempted."
 
-# --- Placeholder for Unit Tests ---
-echo "Running unit tests..."
-# This is where you would add commands to compile and run your C++ unit tests
-# For example, if using a framework like Google Test and CMake:
-# (cd ../build_tests && make && ./your_unit_test_executable)
-# For now, let's just create a dummy unit test file and compile it.
+# --- Unit Tests ---
+echo "Running C++ unit tests..."
 
-echo "Creating a dummy unit test file..."
-cat <<EOF > unit_tests/dummy_test.cpp
-#include <iostream>
-#include <cassert>
+UNIT_TEST_DIR="unit_tests"
+UNIT_TEST_RUNNER="$UNIT_TEST_DIR/unit_test_runner"
 
-// Dummy function to test
-int add(int a, int b) {
-    return a + b;
-}
+# Compile unit tests with Google Test
+# Adjust include (-I) and library (-L) paths if gtest is installed elsewhere
+# Common gtest library names are libgtest.a and libgtest_main.a
+# The -pthread flag is often required by gtest.
+echo "Compiling unit tests..."
+if g++ -std=c++11 "$UNIT_TEST_DIR"/*.cpp -o "$UNIT_TEST_RUNNER" -I/usr/include -L/usr/lib -lgtest -lgtest_main -pthread; then
+    echo "Compilation successful. Running unit tests..."
+    # Run the compiled unit test runner
+    "$UNIT_TEST_RUNNER"
+else
+    echo "Unit test compilation FAILED."
+fi
 
-int main() {
-    assert(add(2, 2) == 4);
-    std::cout << "Dummy unit test passed!" << std::endl;
-    return 0;
-}
-EOF
-
-echo "Compiling and running dummy unit test..."
-g++ -std=c++11 unit_tests/dummy_test.cpp -o unit_tests/dummy_test_runner
-./unit_tests/dummy_test_runner
-
-echo "Unit tests completed."
+echo "C++ Unit tests completed."
 
 echo "All tests finished."

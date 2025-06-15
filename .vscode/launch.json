@@ -5,10 +5,10 @@
         "name": "C++ Debug",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/post_process", // Path to your executable
-        "args": ["single_traj.inp"], // Argument causing the crash
+        "program": "${workspaceFolder}/post_process",
+        "args": ["single_traj.inp"], // Use the input file that causes the crash
         "stopAtEntry": false,
-        "cwd": "${workspaceFolder}", // Working directory
+        "cwd": "${workspaceFolder}",
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
@@ -19,8 +19,8 @@
             "ignoreFailures": true
           }
         ],
-        "preLaunchTask": "build", // This runs the 'build' task from tasks.json before debugging
-        "miDebuggerPath": "/usr/bin/gdb" // Path to your gdb debugger
+        "preLaunchTask": "build",
+        "miDebuggerPath": "/usr/bin/gdb"
       }
     ]
   }

@@ -119,3 +119,63 @@ If you modify the code in a way that intentionally changes the output for a give
 *   If a golden test fails, the `run_tests.sh` script will indicate which files differ. You can manually run `diff -r tests/golden_outputs/<test_name>_outputs/ tests/current_outputs/<test_name>_outputs/` for a detailed comparison.
 *   If the program crashes (e.g., segmentation fault) during a test, use a debugger (like GDB, configured via `.vscode/launch.json` if using VS Code) to diagnose the issue in the C++ code. The test script will indicate which input file caused the crash.
 
+### C++ Unit Tests with Google Test
+
+This project uses the [Google Test](https://github.com/google/googletest) framework for C++ unit tests. Unit tests are located in `tests/unit_tests/`.
+
+**1. Installing Google Test**
+
+   You need to have the Google Test development libraries installed on your system. The method varies by operating system:
+
+   *   **Debian/Ubuntu-based Linux:**
+       ```bash
+       sudo apt-get update
+       sudo apt-get install libgtest-dev cmake
+       # Compile the gtest library (usually needed on Debian/Ubuntu)
+       cd /usr/src/googletest
+       sudo cmake CMakeLists.txt
+       sudo make
+       # Copy the libraries to a standard location
+       sudo cp lib/*.a /usr/lib/ # For older gtest versions
+       sudo cp lib/libgtest.a /usr/lib/
+       sudo cp lib/libgtest_main.a /usr/lib/
+       cd -
+       ```
+       *Note: The exact commands for compiling and installing gtest after `apt-get install libgtest-dev` can sometimes vary slightly between distributions or gtest versions. If the above doesn't work, consult your distribution's documentation or the Google Test documentation.*
+
+   *   **Fedora/RHEL-based Linux:**
+       ```bash
+       sudo dnf install gtest-devel
+       ```
+
+   *   **macOS (using Homebrew):**
+       ```bash
+       brew install googletest
+       ```
+
+   *   **Windows:** Installation on Windows often involves building from source using CMake, or using a package manager like vcpkg. Please refer to the [Google Test documentation](https://github.com/google/googletest/blob/main/googletest/README.md) for detailed instructions.
+
+**2. Writing Unit Tests**
+
+   *   Create your test files (e.g., `my_feature_tests.cpp`) in the `tests/unit_tests/` directory.
+   *   Include the gtest header: `#include "gtest/gtest.h"`.
+   *   Write your tests using the `TEST(TestSuiteName, TestName) { ... }` macro and gtest assertions (e.g., `ASSERT_EQ`, `EXPECT_TRUE`).
+   *   Refer to `tests/unit_tests/example_unit_tests.cpp` for a basic example.
+   *   To test functions from your main `post_process.cpp` or `stdafx.cpp` code, you'll need to structure your main project to be testable. This often involves:
+       *   Moving function declarations into header files (e.g., `post_process.h`).
+       *   Including these headers in your unit test files.
+       *   Compiling your main project source files (or the relevant parts) alongside your test files, or linking against an object file/library created from your main project.
+
+**3. Compiling and Running Unit Tests**
+
+   The `tests/run_tests.sh` script has a section for compiling and running unit tests. It will attempt to:
+   *   Compile all `.cpp` files in `tests/unit_tests/` along with `gtest` and `gtest_main` libraries.
+   *   Create an executable (e.g., `unit_test_runner`) in the `tests/unit_tests/` directory.
+   *   Run this executable.
+
+   The compilation command in `run_tests.sh` is:
+   ```bash
+   g++ -std=c++11 tests/unit_tests/*.cpp -o tests/unit_tests/unit_test_runner -I/usr/include -L/usr/lib -lgtest -lgtest_main -pthread
+   ```
+   You might need to adjust `-I/usr/include` (include path for gtest headers) and `-L/usr/lib` (library path for gtest libraries) if gtest is installed in a non-standard location on your system.
+
