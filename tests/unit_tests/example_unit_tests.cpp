@@ -1,3 +1,4 @@
+// Copyright 2024 OpenPTV
 #include "gtest/gtest.h"
 
 // Example namespace and function to be tested.
@@ -17,7 +18,7 @@ namespace TestableUtils {
         }
         return hasHeader ? rawLineCount - 1 : rawLineCount;
     }
-}
+}  // namespace TestableUtils
 
 // Test case for the multiply function
 TEST(MathUtilsTest, Multiply) {

@@ -73,7 +73,7 @@ run_golden_test() {
 # --- Run Golden Tests ---
 # Ensure the program is built
 echo "Building the program..."
-(cd "$WORKSPACE_ROOT" && g++ -g post_process.cpp stdafx.cpp -o post_process)
+(cd "$WORKSPACE_ROOT" && g++ -g post_process.cpp -o post_process)
 
 # Create a directory for current outputs from test runs
 mkdir -p current_outputs
