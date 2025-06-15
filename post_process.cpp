@@ -358,6 +358,7 @@ void doCubicSplines(bool single, int number) {
 
   for (int i = start; i < end + 1; i++) {
     pointList.point[pointList.PLh][i][14] = 0;  //  can be cubic splined
+    // cppcheck-suppress duplicateAssignExpression
     int minIndex = pointList.PLh;
     int maxIndex = pointList.PLh;
     int index = pointList.PLh;
@@ -1325,11 +1326,11 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             pointList.traj[numInTraj][31] = static_cast<double>(n);
             pointList.noDeriv++;
           }
-        }  //  end of derivatives
+          //  end of derivatives
 
         // gefilterte Infromationen werden direkt auf die Trajektorie
         // geschrieben, gefiltert von cubicspline
-        else {
+        } else {
           pointList.traj[numInTraj][0] = pointList.point[time][n][2];
           pointList.traj[numInTraj][1] = pointList.point[time][n][3];
           pointList.traj[numInTraj][2] = pointList.point[time][n][4];
@@ -1339,12 +1340,12 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
           pointList.traj[numInTraj][6] = pointList.point[time][n][8];
           pointList.traj[numInTraj][7] = pointList.point[time][n][9];
           pointList.traj[numInTraj][8] = pointList.point[time][n][10];
-          pointList.traj[numInTraj][9] = (double)n;
+          pointList.traj[numInTraj][9] = static_cast<double>(n);
         }
 
         numInTraj++;
 
-        // schauen ob's einen n�chsten gibt
+        // schauen ob's einen naechsten gibt
         if (pointList.point[time][n][1] > 0 && time < pointList.lastFile) {
           n = pointList.point[time][n][1];
           time++;
@@ -1357,7 +1358,6 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
       }  //  end while ok
 
       if (pointList.derivatives) {
-
         // Wenn eine Trajektorie fertig ist, dann wird weighted polynomial fit
         // durchgeführt
 
@@ -1746,10 +1746,9 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
                   x24[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
                                 static_cast<double>(ij));
             }
-
           }  //  end for loop through traj
 
-          // Statistik f�r den Zuschauer
+          // Statistik für den Zuschauer
           for (int ii = 0; ii < numInTraj; ii++) {
             USq = up[ii] * up[ii] + vp[ii] * vp[ii] + wp[ii] * wp[ii];
 
@@ -1770,7 +1769,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             s123 = s12p[ii] * s23p[ii] * s13p[ii];
             sijsjkski = s111 + s222 + s333 +
                         3. * (s112 + s113 + s221 + s223 + s331 + s332) +
-                        6. * s123;  //  mal �berpr�fen...
+                        6. * s123;  //  mal überprüfen...
 
             wsq = w1p[ii] * w1p[ii] + w2p[ii] * w2p[ii] + w3p[ii] * w3p[ii];
             twosijsij = 2. * (s11p[ii] * s11p[ii] + s22p[ii] * s22p[ii] +
@@ -1837,53 +1836,53 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
                       pointList.weVel * reldivu;
 
             // prepare for xuag files
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][12] = ux;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][13] = uy;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][14] = uz;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][15] = vx;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][16] = vy;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][17] = vz;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][18] = wx;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][19] = wy;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][20] = wz;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][21] = 1;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][22] = utp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][23] = vtp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][24] = wtp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][25] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][12] = ux;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][13] = uy;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][14] = uz;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][15] = vx;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][16] = vy;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][17] = vz;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][18] = wx;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][19] = wy;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][20] = wz;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][21] = 1;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][22] = utp[ii];
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][23] = vtp[ii];
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][24] = wtp[ii];
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][25] =
                 daxdxp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][26] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][26] =
                 daxdyp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][27] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][27] =
                 daxdxp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][28] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][28] =
                 daydxp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][29] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][29] =
                 daydyp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][30] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][30] =
                 daydzp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][31] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][31] =
                 dazdxp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][32] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][32] =
                 dazdyp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][33] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][33] =
                 dazdzp[ii];
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][34] = quality;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][35] =
-                (double)numInTraj;  // 
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][36] =
-                (double)ii;  //  added by Beat and Marc, 31.08.2011
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][34] = quality;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][35] =
+                static_cast<double>(numInTraj);
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][36] =
+                static_cast<double>(ii);  //  added by Beat and Marc, 31.08.2011
                             // end of prepare xuag files
 
             if (pointList.weDiv * fabs(2 * Q + diva) / ref_diva +
                 pointList.weAcc * absDi + pointList.weVel * reldivu) {
               pointList.count2++;
               pointList.meanDiss =
-                  (pointList.meanDiss * (double)(pointList.count2 - 1) + diss) /
-                  (double)pointList.count2;
+                  (pointList.meanDiss * static_cast<double>(pointList.count2 - 1) + diss) /
+                  static_cast<double>(pointList.count2);
               pointList.meanUSq =
-                  (pointList.meanUSq * (double)(pointList.count2 - 1) + USq) /
-                  (double)pointList.count2;
+                  (pointList.meanUSq * static_cast<double>(pointList.count2 - 1) + USq) /
+                  static_cast<double>(pointList.count2);
             }
             if (reldiva < 0.1) {
               pointList.count4++;
@@ -1930,13 +1929,11 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             fprintf(fpp, "%lf\n",
                     pointList.traj[ii][9]);  //  33 reference to index in rt_is,
                                             // ptv_is, xuap files
-
           }  //  end for
             //  // end of polynom business
-
         }  //  end if of polynom buisness
-      }  //  end of derivatives
-      else {
+          //  end of derivatives
+      } else {
         double xp[500], yp[500], zp[500], up[500], vp[500], wp[500];
         double axp[500], ayp[500], azp[500];
         for (int ii = 0; ii < numInTraj; ii++) {
@@ -1958,16 +1955,14 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
           fprintf(fpp, "%lf\t", axp[ii]);  //  7
           fprintf(fpp, "%lf\t", ayp[ii]);  //  8
           fprintf(fpp, "%lf\t", azp[ii]);  //  9
-          fprintf(fpp, "%lf\t", (double)(ii));  //  32 age along trajectory
+          fprintf(fpp, "%lf\t", static_cast<double>(ii));  //  32 age along trajectory
           fprintf(fpp, "%lf\n",
                   pointList.traj[ii][9]);  // n, reference to index in rt_is, ptv_is, xuap files
         }
       }
-
     }  //  end if not occ und central
-
   }  //  end haupt for schlaufe
-}
+}  // NOLINT
 
 void readXUAPFile(int n, bool firstTime) {
   int numOfPoints;
@@ -2063,7 +2058,6 @@ void readXUAGFile(int n, bool firstTime) {
   for (int i = 0; i < pointList.numOfFrames; i++) {
     if (n - 2 + i > pointList.firstFile - 1 && n - 2 + i < pointList.lastFile) {
       if (i < pointList.numOfFrames - 1 && !(firstTime)) {
-
         for (int j = 0; j < pointList.point[i + 1][0][0] + 1; j++) {
           for (int k = 0; k < 35; k++) {
             pointList.point[i][j][k] = pointList.point[i + 1][j][k];
