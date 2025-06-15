@@ -1,4 +1,5 @@
-// stdafx.h : include file for standard system include files,
+// Copyright 2024 <Your Name or Organization>
+// stdafx.h : include file for standard system include files,  // NOLINT
 // or project specific include files that are used frequently, but
 // are changed infrequently
 //

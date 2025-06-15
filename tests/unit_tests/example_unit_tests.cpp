@@ -8,7 +8,7 @@
 namespace TestableUtils {
     double multiply(double a, double b) {
         return a * b;
-    } // namespace TestableUtils
+    }
 
     // A simple function that might interact with some logic from post_process.cpp
     // For demonstration, let's imagine it processes a line count.
@@ -18,7 +18,7 @@ namespace TestableUtils {
         }
         return hasHeader ? rawLineCount - 1 : rawLineCount;
     }
-}
+}  // namespace TestableUtils
 
 // Test case for the multiply function
 TEST(MathUtilsTest, Multiply) {
