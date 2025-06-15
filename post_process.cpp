@@ -1322,7 +1322,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             pointList.traj[numInTraj][29] = 0;
 
             pointList.traj[numInTraj][30] = 1.;  //  Wichtig
-            pointList.traj[numInTraj][31] = (double)n;
+            pointList.traj[numInTraj][31] = static_cast<double>(n);
             pointList.noDeriv++;
           }
         }  //  end of derivatives
@@ -1621,32 +1621,32 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             s22p[ii] = 0;
             s23p[ii] = 0;
             s33p[ii] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][12] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][13] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][14] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][15] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][16] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][17] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][18] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][19] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][20] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][21] =
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][12] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][13] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][14] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][15] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][16] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][17] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][18] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][19] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][20] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][21] =
                 0;  //  grdients?
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][22] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][23] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][24] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][25] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][26] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][27] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][28] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][29] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][30] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][31] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][32] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][33] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][34] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][35] = 0;
-            pointList.point[ii + 2][(int)pointList.traj[ii][31]][36] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][22] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][23] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][24] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][25] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][26] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][27] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][28] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][29] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][30] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][31] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][32] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][33] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][34] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][35] = 0;
+            pointList.point[ii + 2][static_cast<int>(pointList.traj[ii][31])][36] = 0;
             utp[ii] = 0;
             vtp[ii] = 0;
             wtp[ii] = 0;
@@ -1673,78 +1673,78 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             for (int ij = 0; ij < order; ij++) {
               w1p[ii] =
                   w1p[ii] +
-                  x4[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                               (double)(ij));  //  change to get non-filtered
-                                              // data: pointList.traj[ii][ 9];  // 
+                  x4[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                               static_cast<double>(ij));  //  change to get non-filtered
+                                              // data: pointList.traj[ii][ 9];  //
               w2p[ii] = w2p[ii] +
-                        x5[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                     (double)(ij));
+                        x5[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                     static_cast<double>(ij));
               w3p[ii] = w3p[ii] +
-                        x6[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                     (double)(ij));
+                        x6[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                     static_cast<double>(ij));
               s11p[ii] = s11p[ii] +
-                         x7[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                      (double)(ij));
+                         x7[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                      static_cast<double>(ij));
               s12p[ii] = s12p[ii] +
-                         x8[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                      (double)(ij));
+                         x8[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                      static_cast<double>(ij));
               s13p[ii] = s13p[ii] +
-                         x9[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                      (double)(ij));
+                         x9[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                      static_cast<double>(ij));
               s22p[ii] = s22p[ii] +
-                         x10[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                       (double)(ij));
+                         x10[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                       static_cast<double>(ij));
               s23p[ii] = s23p[ii] +
-                         x11[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                       (double)(ij));
+                         x11[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                       static_cast<double>(ij));
               s33p[ii] = s33p[ii] +
-                         x12[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                       (double)(ij));
+                         x12[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                       static_cast<double>(ij));
               utp[ii] = utp[ii] +
-                        x13[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                      (double)(ij));
+                        x13[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                      static_cast<double>(ij));
               vtp[ii] = vtp[ii] +
-                        x14[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                      (double)(ij));
+                        x14[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                      static_cast<double>(ij));
               wtp[ii] = wtp[ii] +
-                        x15[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                      (double)(ij));
+                        x15[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                      static_cast<double>(ij));
               daxdxp[ii] =
                   daxdxp[ii] +
-                  x16[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x16[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               daxdyp[ii] =
                   daxdyp[ii] +
-                  x17[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));  // NOLINT
+                  x17[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));  // NOLINT
               daxdzp[ii] =
                   daxdzp[ii] +
-                  x18[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x18[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               daydxp[ii] =
                   daydxp[ii] +
-                  x19[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x19[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               daydyp[ii] =
                   daydyp[ii] +
-                  x20[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x20[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               daydzp[ii] =
                   daydzp[ii] +
-                  x21[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x21[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               dazdxp[ii] =
                   dazdxp[ii] +
-                  x22[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x22[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               dazdyp[ii] =
                   dazdyp[ii] +
-                  x23[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x23[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
               dazdzp[ii] =
                   dazdzp[ii] +
-                  x24[ij] * pow((double)ii * pointList.deltaT + 0.00001,
-                                (double)(ij));
+                  x24[ij] * pow(static_cast<double>(ii) * pointList.deltaT + 0.00001,
+                                static_cast<double>(ij));
             }
 
           }  //  end for loop through traj
