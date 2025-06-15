@@ -278,7 +278,8 @@ int main(int argc, char *argv[]) {
       fclose(fpp);
     }
   }
-  scanf("%9s", garb);  //  to stop console, limit input to 9 characters (+1 for null terminator)
+  
+  // scanf("%9s", garb);  //  to stop console, limit input to 9 characters (+1 for null terminator)
 
   return 0;
 }
