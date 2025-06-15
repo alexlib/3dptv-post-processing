@@ -208,9 +208,7 @@ int main(int argc, char *argv[]) {
   pointList.yChamberChannel = e;
 
   // end of read in control parameters
-  /////////////////////////////////////////////////////////////////////////////////  // 
 
-  /////////////////////////////////////////////////////////////////////////////////  // 
   if (pointList.xuap) {
     pointList.PLh = static_cast<int>(static_cast<double>(pointList.PL) / 2.);
     pointList.count = 0;
@@ -232,8 +230,7 @@ int main(int argc, char *argv[]) {
       writeXUAPFile(i);
     }
   }
-  /////////////////////////////////////////////////////////////////////////////////  // 
-  /////////////////////////////////////////////////////////////////////////////////  // 
+
   if (pointList.traj_point) {
     pointList.count = 0;
     pointList.count2 = 0;
@@ -1284,10 +1281,9 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
               pointList.traj[numInTraj][30] = 0.95;
             }
             pointList.traj[numInTraj][31] = n;
-
           }  //  end of if pCOunter>3 solve...
 
-          // Catch falls r�umliche Interpolation versagt: es werden dennoch die
+          // Catch falls raeumliche Interpolation versagt: es werden dennoch die
           // Informationen verwendet, die da sind, d.h. alle Punkte der
           // Trajektorie werden verwendet
           if (!(pCounterA > minCounter && pCounterB > minCounter &&
@@ -1393,7 +1389,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
           for (int ii = 0; ii < numInTraj; ii++) {
             su = su + 1 - pointList.traj[ii][30];  //  reldiv(ii)
           }
-          int order = (int)(su / pointList.polyConst + 3.5);
+          int order = static_cast<int>(su / pointList.polyConst + 3.5);
           if (numInTraj < 5) {
             order = 2;
           }
@@ -1411,13 +1407,13 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
                            pointList.c2)));  //  reldiv(ii) (Beat's Diss eq. 2.30)
           }
 
-          // Abf�llen der Matrix
+            // Fill the matrix
           for (int ii = 0; ii < numInTraj; ii++) {
             for (int ij = 0; ij < order; ij++) {
               pointList.A[ii][ij] =
                   pointList.we[ii] *
-                  pow((double)ii * pointList.deltaT + 0.000000001,
-                      (double)(ij));
+                  pow(static_cast<double>(ii) * pointList.deltaT + 0.000000001,
+                      static_cast<double>(ij));
             }
 
             pointList.y[4][ii] =
