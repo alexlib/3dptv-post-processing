@@ -1,3 +1,4 @@
+// Copyright 2024 OpenPTV
 #include "gtest/gtest.h"
 
 // Example namespace and function to be tested.
@@ -7,7 +8,7 @@
 namespace TestableUtils {
     double multiply(double a, double b) {
         return a * b;
-    }
+    } // namespace TestableUtils
 
     // A simple function that might interact with some logic from post_process.cpp
     // For demonstration, let's imagine it processes a line count.
