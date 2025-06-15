@@ -10,7 +10,7 @@
 //
 // last update/change: August 2011 Marc Wolf
 //
-////////////////////////////////////////////////////////////////////////////  // 
+////////////////////////////////////////////////////////////////////////////
 
 /*
 
@@ -463,8 +463,8 @@ void doCubicSplines(bool single, int number) {
                     //  (pointList.point[11][ind[11]][3]-pointList.point[9][ind[9]][3]);
       pointList.point[pointList.PLh][i][12] =
           2. *
-          pointList.X
-              [2];  //  (1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][3]-2.*pointList.point[pointList.PLh][ind[pointList.PLh]][3]+pointList.point[9][ind[9]][3]);
+          pointList.X[2];
+      //  (1./(pointList.pointList.deltaT*pointList.pointList.deltaT))*(pointList.point[11][ind[11]][3]-2.*pointList.point[pointList.PLh][ind[pointList.PLh]][3]+pointList.point[9][ind[9]][3]);
       // z-Component
       setAllMatrixesToZero(4);
       for (int t = minIndex - pointList.PLh; t < maxIndex - pointList.PLh + 1;
@@ -758,7 +758,6 @@ bool solveC(int n, int m) {
   return ok;
 }
 void writeXUAPFile(int t) {
-
   FILE *fpp;
   char name[256];
   int c;
@@ -781,11 +780,11 @@ void writeXUAPFile(int t) {
                            pow(pointList.point[pointList.PLh][i][13], 2.),
                        0.5);
       pointList.meanVel =
-          (pointList.meanVel * (double)(pointList.count - 1) + vel) /
-          (double)pointList.count;
+          (pointList.meanVel * static_cast<double>(pointList.count - 1) + vel) /
+          static_cast<double>(pointList.count);
       pointList.meanAcc =
-          (pointList.meanAcc * (double)(pointList.count - 1) + acc) /
-          (double)pointList.count;
+          (pointList.meanAcc * static_cast<double>(pointList.count - 1) + acc) /
+          static_cast<double>(pointList.count);
       if (vel > pointList.maxVel) {
         pointList.maxVel = vel;
       }
@@ -849,7 +848,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
   }
 
   start = 1;
-  end = (int)(pointList.point[2][0][0] + 0.5);  //  1. field tells number of rows
+  end = static_cast<int>(pointList.point[2][0][0] + 0.5);  //  1. field tells number of rows
 
   int n;
   for (int nn = start; nn < end; nn++) {
@@ -870,15 +869,14 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
       while (ok) {
         pointList.occ[t + time - 2 - pointList.firstFile][n] = true;
         // interpolieren und rausschreiben mit t,n (Zeit und Startpunkt)
-        //%Da soll jetzt duidxj linear interpoliert werden
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        //%die n�chsten Punkte zu Punkt x,y,z, finden
+        // %Da soll jetzt duidxj linear interpoliert werden
+        // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        // %die naechsten Punkte zu Punkt x,y,z, finden
         pointList.count++;
         setAllMatrixesToZero(4);
         contin = true;
 
         if (pointList.derivatives) {
-
           centerX = pointList.point[time][n][2];  //  filtered x,y,z
           centerY = pointList.point[time][n][3];
           centerZ = pointList.point[time][n][4];
@@ -970,7 +968,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
           pCounterC = 0;
 
           int i;
-          // Abf�llen der �berbestimmten linearen Gleichungssyteme (3
+          // Abfuellen der ueberbestimmten linearen Gleichungssysteme (3
           // Zeitschritte)
           for (int pointInd = 0; (pointInd < pointList.maxRank) &&
                                  (minDistA[pointInd] < pointList.maxRadius);
@@ -988,11 +986,10 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
               dy = pointList.point[time - 1][i][3] - centerY;
               dz = pointList.point[time - 1][i][4] - centerZ;
               pointList.A[pCounterA][0] =
-                  1.;  //  auff�llen A Matrix linearer Ansatz
+                  1.;  //  auffuellen A Matrix linearer Ansatz
               pointList.A[pCounterA][1] = dx;
               pointList.A[pCounterA][2] = dy;
               pointList.A[pCounterA][3] = dz;
-
               pointList.y[1][pCounterA] =
                   pointList.point[time - 1][i]
                                  [5];  //  drei Komponenten Geschwindigkeit
@@ -1067,11 +1064,11 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
           if (pCounterA > minCounter && pCounterB > minCounter &&
               pCounterC >
                   minCounter) {  //  %jetzt wird endlich Punkt1 interpoliert
-            //%correct x,y,z with center of interpolation!
+            // %correct x,y,z with center of interpolation!
 
             makeBT(
                 pCounterB,
-                4);  //  Gegenwart: r�umliche Ableitungen f�r Geschw. und Beschl.
+                4);  //  Present: spatial derivatives for velocity and acceleration.
             makeBTB(pCounterB, 4);
             makeBTY(pCounterB, 4, 1);
             solveB(pCounterB, 4);
@@ -1195,9 +1192,9 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
 
             Liw[4] = 1. / (pointList.deltaT) * (0.5 * wp - 0.5 * wm);
 
-            //////////////////  // 
+            //////////////////  //
 
-            //%omega,strain,div,ref
+            // %omega,strain,div,ref
             w1 = Liw[2] - Liv[3];
             w2 = Liu[3] - Liw[1];
             w3 = Liv[1] - Liu[2];
@@ -1210,7 +1207,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
             div = fabs(trace);
             ref = fabs(s11) + fabs(s22) + fabs(s33);
 
-            // acceleration quality: Vorbereitung f�r polynomial fits
+            // acceleration quality: Vorbereitung for polynomial fits
             Dx = Liax[0];
             lx = Liu[4];
             cx = Liu[0] * Liu[1] + Liv[0] * Liu[2] + Liw[0] * Liu[3];
@@ -1239,7 +1236,7 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
                        fabs(Liax[1]) + fabs(Liay[2]) +
                        fabs(Liaz[3]);  //  Beat und Marc Juni 2011: (1./4.)*
 
-            // Vorbereitung f�r polynomial fit
+            // Vorbereitung fuer polynomial fit
             pointList.traj[numInTraj][0] = pointList.point[time][n][2];
             pointList.traj[numInTraj][1] = pointList.point[time][n][3];
             pointList.traj[numInTraj][2] = pointList.point[time][n][4];
@@ -1279,8 +1276,8 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
                   pointList.weAcc * absDi + pointList.weVel * div / ref;
             } else {
               pointList.traj[numInTraj][30] =
-                  0.95;  //  Gewichtung f�r Punkte bei denen docubicspline
-                        // und/oder die r�umliche Interpolation nicht geklappt
+                  0.95;  //  Gewichtung fuer Punkte bei denen docubicspline
+                        // und/oder die raeumliche Interpolation nicht geklappt
                         // hat
             }
             if (pointList.traj[numInTraj][30] > 0.95) {
@@ -1366,11 +1363,11 @@ void followTrajPoint(FILE *fpp, int t, int startPoint) {
       if (pointList.derivatives) {
 
         // Wenn eine Trajektorie fertig ist, dann wird weighted polynomial fit
-        // durchgef�hrt
+        // durchgeführt
 
         if (numInTraj - pointList.noDeriv >
             pointList.minTrajLength - 1) {  //  Wichtig
-          ///  // polynom business//////////////////////////////////////  // 
+          ///  // polynom business//////////////////////////////////////  //
           double su = 0.;
           double x4[500], x5[500], x6[500];
           double x7[500], x8[500], x9[500], x10[500], x11[500];
@@ -2014,9 +2011,9 @@ void readXUAPFile(int n, bool firstTime) {
         }
       } else {
         numOfPoints = 0;
-        c = sprintf(name, pointList.path);
-        c += sprintf(name + c, "/xuap.");
-        c += sprintf(name + c, "%1d", n - 2 + i);
+        c = snprintf(name, sizeof(name), "%s", pointList.path);
+        c += snprintf(name + c, sizeof(name) - c, "/xuap.");
+        c += snprintf(name + c, sizeof(name) - c, "%1d", n - 2 + i);
         fpp = fopen(name, "r");
         while (!feof(fpp)) {
           numOfPoints++;
