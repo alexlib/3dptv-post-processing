@@ -1829,7 +1829,7 @@ void readXUAGFile(int n, bool firstTime)
 				   pointList.point[i][numOfPoints][34]=0;//35
 				   pointList.point[i][numOfPoints][35]=0;//36
 				   pointList.point[i][numOfPoints][36]=0;//37
-				   pointList.point[i][numOfPoints][37]=quality;//38;
+                pointList.point[i][numOfPoints][37] = quality;  // 38
                 }
                 fclose (fpp);
                 pointList.point[i][0][0]=numOfPoints;
