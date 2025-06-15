@@ -6,8 +6,9 @@
         "type": "shell",
         "command": "g++",
         "args": [
-          "-g",
+          "-g", // Essential for debugging
           "post_process.cpp",
+          "stdafx.cpp",
           "-o",
           "post_process"
         ],

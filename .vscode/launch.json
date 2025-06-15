@@ -6,7 +6,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/post_process",
-        "args": ["input.inp"],
+        "args": ["single_traj.inp"], // Use the input file that causes the crash
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
         "environment": [],
@@ -20,10 +20,7 @@
           }
         ],
         "preLaunchTask": "build",
-        "miDebuggerPath": "/usr/bin/gdb",
-        "logging": {
-          "engineLogging": true
-        }
+        "miDebuggerPath": "/usr/bin/gdb"
       }
     ]
   }
