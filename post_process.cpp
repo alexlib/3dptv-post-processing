@@ -1,3 +1,4 @@
+// Copyright 2006-2011 Beat Luthi, Risø Nat. Lab, Denmark and IfU, ETH Zürich
 //////////////////////////////////////////////////////////////////////////////
 //
 // this code was written by Beat Luthi at IfU, ETH Z�rich, Okt 2007
@@ -34,7 +35,7 @@ A PARTICULAR PURPOSE.
 */
 
 
-#include "stdafx.h"
+#include "stdafx.h"  // NOLINT
 
 
 TpointList pointList;
@@ -46,146 +47,175 @@ float e;
 
 static void flushline(FILE * fp);
 static void readPTVFile(int n, int index);
-static void doCubicSplines(bool single,int number);
+static void doCubicSplines(bool single, int number);
 static void setAllMatrixesToZero(int size);
 static void makeAT(int n, int m);
 static void makeATA(int n, int m);
-static void makeATY(int n, int m,int wh);
+static void makeATY(int n, int m, int wh);
 static bool solve(int n, int m);
 static void writeXUAPFile(int t);
-static void followTrajPoint(FILE *fpp, int t,int startPoint);
+static void followTrajPoint(FILE *fpp, int t, int startPoint);
 static void readXUAPFile(int n, bool firstTime);
 static void readXUAGFile(int n, bool firstTime);
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     char garb[10];
     char pa[256];
     char name[256];
     int c;
 
-    //begin of read in control parameters
+    // begin of read in control parameters
     ///////////////////////////////////////////////////////////////////////////////////
     if (argc == 1) {
-        if (NULL == (input = fopen("input.inp","r"))){
+        if (NULL == (input = fopen("input.inp", "r"))) {
             cout<< "\ndid not find *.inp file";
-        }
-        else{
+        } else {
             cout<< "\nautomatically and succesfully opened *.inp file \n";
         }
-    }
-    else{
-        if (NULL == (input = fopen(argv[1],"r"))){
+    } else {
+        if (NULL == (input = fopen(argv[1], "r"))) {
             cout<< "\ndid not find *.inp file";
-        }
-        else{
+        } else {
             cout<< "\nsuccesfully opened *.inp file \n";
         }
     }
-    //what should be done?
-    fscanf(input,"%i",&n); flushline(input); if(n==1){pointList.xuap=true;}         else{pointList.xuap=false;}
-    fscanf(input,"%i",&n); flushline(input); if(n==1){pointList.traj_point=true;}       else{pointList.traj_point=false;}
-    fscanf(input,"%i",&n); flushline(input); if(n==1){pointList.derivatives=true;}      else{pointList.derivatives=false;}
-    fscanf(input,"%i",&n); flushline(input); if(n==1){pointList.pressure=true;}     else{pointList.pressure=false;}
-    fscanf(input,"%i",&n); flushline(input); if(n==1){pointList.Hessian=true;}      else{pointList.Hessian=false;}
-
-
-    //data    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);    // path to the ptv_is files
-
-    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);
-    fscanf(input,"%i",&n); flushline(input);pointList.firstFile                = n;
-    fscanf(input,"%i",&n); flushline(input);pointList.lastFile                 = n;
-
-    //fact
-    fscanf(input,"%f",&e); flushline(input);pointList.deltaT                   = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.viscosity                = e;
-
-    //controls xuap
-    fscanf(input,"%i",&n); flushline(input);pointList.PL                       = n;
-    fscanf(input,"%i",&n); flushline(input);pointList.minLeftRight             = n;
-    fscanf(input,"%f",&e); flushline(input);pointList.tolMaxVel                = e;
-
-    //controls traj_accc
-    fscanf(input,"%f",&e); flushline(input);pointList.maxRadius                = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.weDiv                    = e; // weighting for 2Q+diva error
-    fscanf(input,"%f",&e); flushline(input);pointList.weAcc                    = e; // weighting for acceleration error
-    fscanf(input,"%f",&e); flushline(input);pointList.weVel                    = e; // weighting for divu error, addeded by Marc, 14.07.2011
+    // what should be done?
+    fscanf(input, "%i", &n); flushline(input); if (n == 1) {pointList.xuap=true;}         else {pointList.xuap=false;}
+    fscanf(input, "%i", &n);
     flushline(input);
-    fscanf(input,"%i",&n); flushline(input);pointList.minTrajLength            = n;
-    fscanf(input,"%i",&n); flushline(input);pointList.polyConst                = n;
-    fscanf(input,"%f",&e); flushline(input);pointList.c1                       = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.c2                       = e;
-    fscanf(input,"%i",&n); flushline(input);pointList.maxRank                  = n;
-    fscanf(input,"%i",&n); flushline(input);pointList.numOfFrames              = n;
+    if (n == 1) {
+        pointList.traj_point = true;
+    } else {
+        pointList.traj_point = false;
+    }
+    fscanf(input, "%i", &n);
     flushline(input);
-    fscanf(input,"%f",&e); flushline(input);pointList.xminChamber              = e; //added by Markus, 20.07.2009
-    fscanf(input,"%f",&e); flushline(input);pointList.xmaxChamber              = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.xminChannel              = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.xmaxChannel              = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.zminChamber              = e; //added by Markus, 20.07.2009
-    fscanf(input,"%f",&e); flushline(input);pointList.zmaxChamber              = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.zminChannel              = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.zmaxChannel              = e;
-    fscanf(input,"%f",&e); flushline(input);pointList.yChamberChannel          = e;
-    
-    //end of read in control parameters
+    if (n == 1) {
+        pointList.derivatives = true;
+    } else {
+        pointList.derivatives = false;
+    }
+    fscanf(input, "%i", &n);
+    flushline(input);
+    if (n == 1) {
+        pointList.pressure = true;
+    } else {
+        pointList.pressure = false;
+    }
+    fscanf(input, "%i", &n);
+    flushline(input);
+    if (n == 1) {
+        pointList.Hessian = true;
+    } else {
+        pointList.Hessian = false;
+    }
+
+
+    // data    fscanf(input,"%s",pa); flushline(input);sprintf (pointList.path,"%s",pa);    // path to the ptv_is files
+
+    fscanf(input, "%255s", pa); flushline(input); snprintf(pointList.path, sizeof(pointList.path), "%s", pa);
+    fscanf(input, "%i", &n); flushline(input); pointList.firstFile                = n;
+    fscanf(input, "%i", &n); flushline(input); pointList.lastFile                 = n;
+
+    // fact
+    fscanf(input, "%f", &e); flushline(input); pointList.deltaT                   = e;
+    fscanf(input, "%f", &e); flushline(input); pointList.viscosity                = e;
+
+    // controls xuap
+    fscanf(input, "%i", &n); flushline(input); pointList.PL                       = n;
+    fscanf(input, "%i", &n); flushline(input); pointList.minLeftRight             = n;
+    fscanf(input, "%f", &e); flushline(input); pointList.tolMaxVel                = e;
+
+    // controls traj_accc
+    fscanf(input, "%f", &e); flushline(input); pointList.maxRadius                = e;
+    fscanf(input, "%f", &e); flushline(input); pointList.weDiv                    = e;  // weighting for 2Q+diva error
+    fscanf(input, "%f", &e);
+    flushline(input);
+    pointList.weAcc = e;  //  weighting for acceleration error
+    fscanf(input, "%f", &e);
+    flushline(input); pointList.weVel = e;  //  weighting for divu error, addeded by Marc, 14.07.2011
+    flushline(input);
+    fscanf(input, "%i", &n); flushline(input); pointList.minTrajLength            = n;
+    fscanf(input, "%i", &n); flushline(input); pointList.polyConst                = n;
+    fscanf(input, "%f", &e); flushline(input); pointList.c1                       = e;
+    fscanf(input, "%f", &e); flushline(input); pointList.c2                       = e;
+    fscanf(input, "%i", &n); flushline(input); pointList.maxRank                  = n;
+    fscanf(input, "%i", &n); flushline(input); pointList.numOfFrames              = n;
+    flushline(input);
+    fscanf(input, "%f", &e);  flushline(input);  pointList.xminChamber              = e;  // added by Markus, 20.07.2009
+    fscanf(input, "%f", &e);  flushline(input);  pointList.xmaxChamber              = e;
+    fscanf(input, "%f", &e);  flushline(input);  pointList.xminChannel              = e;
+    fscanf(input, "%f", &e);  flushline(input);  pointList.xmaxChannel              = e;
+    fscanf(input, "%f", &e);  flushline(input);  pointList.zminChamber              = e;  // added by Markus, 20.07.2009
+    fscanf(input, "%f", &e);  flushline(input);  pointList.zmaxChamber              = e;
+    fscanf(input, "%f", &e);  flushline(input);  pointList.zminChannel              = e;
+    fscanf(input, "%f", &e);  flushline(input);  pointList.zmaxChannel              = e;
+    fscanf(input, "%f", &e);  flushline(input);  pointList.yChamberChannel          = e;
+
+    // end of read in control parameters
     ///////////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////////////
-    if(pointList.xuap){
-       pointList.PLh=int((double)pointList.PL/2.);
-       pointList.count=0;
-       pointList.maxVel=0.;
-       pointList.meanVel=0.;
-       pointList.meanAcc=0.;
+    if (pointList.xuap) {
+        pointList.PLh = static_cast<int>(static_cast<double>(pointList.PL) / 2.);
+        pointList.count = 0;
+        pointList.maxVel = 0.;
+        pointList.meanVel = 0.;
+        pointList.meanAcc = 0.;
 
-       for (int i=pointList.firstFile;i<pointList.lastFile+1;i++){
-          if(i % 20 == 0){
-             cout << "processing file ........."<<i<<"\n";
-             cout << "max Vel.................."<<pointList.maxVel<<"\n";
-             cout << "mean Vel................."<<pointList.meanVel<<"\n";
-             cout << "mean Acc................."<<pointList.meanAcc<<"\n\n";
-          }
-          for (int ii=-pointList.PLh;ii<pointList.PLh+1;ii++){
-              readPTVFile(i,ii);
-          }
-          doCubicSplines(false,0);
+        for (int i = pointList.firstFile; i < pointList.lastFile + 1; i++) {
+            if (i % 20 == 0) {
+                cout << "processing file ........." << i << "\n";
+                cout << "max Vel.................." << pointList.maxVel << "\n";
+                cout << "mean Vel................." << pointList.meanVel << "\n";
+                cout << "mean Acc................." << pointList.meanAcc << "\n\n";
+            }
+            for (int ii = -pointList.PLh; ii < pointList.PLh + 1; ii++) {
+                readPTVFile(i, ii);
+            }
+            doCubicSplines(false, 0);
           writeXUAPFile(i);
        }
     }
     ///////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
-    if(pointList.traj_point){
+    if (pointList.traj_point) {
+        pointList.count = 0;
+        pointList.count2 = 0;
+        pointList.count3 = 0;
+        pointList.count4 = 0;
+        pointList.count5 = 0;
+        pointList.count6 = 0;
+        pointList.meanDiss = 0.0;
+        pointList.meanUSq = 0.0;
 
-       pointList.count=0;
-       pointList.count2=0;
-       pointList.count3=0;
-       pointList.count4=0;
-       pointList.count5=0;
-       pointList.count6=0;
-       pointList.meanDiss=0.;
-       pointList.meanUSq=0.;
+        for (int i = pointList.firstFile; i < pointList.lastFile + 1; i++) {
+            if (static_cast<double>(pointList.count3) / static_cast<double>(pointList.count) > 0) {
+                cout << "point per sphere.............."
+                     << (static_cast<double>(pointList.count3) / static_cast<double>(pointList.count))
+                     << "\n";
+                cout << "% rel. diva < 0.1............."
+                     << 100.0 * static_cast<double>(pointList.count4)
+                     / static_cast<double>(pointList.count) << "\n";
+                cout << "% rel. acc  < 0.2............."
+                     << 100.0 * static_cast<double>(pointList.count5)
+                     / static_cast<double>(pointList.count) << "\n";
+                cout << "% rel. divu < 0.1............."
+                     << 100.0 * static_cast<double>(pointList.count6)
+                     / static_cast<double>(pointList.count) << "\n";
+                cout << "r.m.s. u [m/s]................" << pow(pointList.meanUSq, 0.5) << "\n";
+                cout << "mean dissipation [m^2/s^3]...." << pointList.meanDiss << "\n\n";
+            }
+            cout << "processing file .............." << i << "\n";
 
-       for (int i=pointList.firstFile;i<pointList.lastFile+1;i++){
-          if((double)pointList.count3/(double)pointList.count>0){
-             cout << "point per sphere.............."<<(double)pointList.count3/(double)pointList.count<<"\n";
-             cout << "% rel. diva < 0.1............."<<100.*(double)pointList.count4/(double)pointList.count<<"\n";
-             cout << "% rel. acc  < 0.2............."<<100.*(double)pointList.count5/(double)pointList.count<<"\n";
-             cout << "% rel. divu < 0.1............."<<100.*(double)pointList.count6/(double)pointList.count<<"\n";
-             cout << "r.m.s. u [m/s]................"<<pow(pointList.meanUSq,0.5)<<"\n";
-             cout << "mean dissipation [m^2/s^3]...."<<pointList.meanDiss<<"\n\n";
-          }
-          cout << "processing file .............."<<i<<"\n";
-           
-          c=sprintf (name, pointList.path);
-          c+=sprintf (name+c, "/trajPoint.");
-          c+=sprintf (name+c, "%1d", i); 
-          fpp = fopen(name,"w");
-          followTrajPoint(fpp,i,0);
-          fclose (fpp);
-      
-       }
+            c = snprintf(name, sizeof(name), "%s", pointList.path);
+            c += snprintf(name + c, sizeof(name) - c, "/trajPoint.");
+            c += snprintf(name + c, sizeof(name) - c, "%1d", i);
+            fpp = fopen(name, "w");
+            followTrajPoint(fpp, i, 0);
+            fclose(fpp);
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////
     scanf("Please hit a key  %s", garb);  // to stop console
